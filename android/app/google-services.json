@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "284920567955",
+    "firebase_url": "https://ohstel-46965.firebaseio.com",
+    "project_id": "ohstel-46965",
+    "storage_bucket": "ohstel-46965.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284920567955:android:6e2a76a9ef64cb75281566",
+        "android_client_info": {
+          "package_name": "com.example.Ohstel_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx6l_ogjOLxrgqfdKr-dILXHT36QqcK5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284920567955:android:27a91a6086b937e6281566",
+        "android_client_info": {
+          "package_name": "com.example.ohostel_hostel_agent_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx6l_ogjOLxrgqfdKr-dILXHT36QqcK5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
