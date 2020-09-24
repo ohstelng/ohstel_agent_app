@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/auth/methods/auth_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/pages/food_home.dart';
+import 'package:ohostel_hostel_agent_app/market_place/pages/market_home_page.dart';
 
 import 'file:///C:/Users/olamilekan/flutter_projects/work_space/ohostel_hostel_agent_app/lib/hostel_booking/hoste_home_page.dart';
 
@@ -54,6 +55,26 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Text(
                   'Food Agent App',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: FlatButton(
+                color: Colors.green,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => MarketHomePage(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Market Agent App',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

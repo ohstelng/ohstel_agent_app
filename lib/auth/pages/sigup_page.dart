@@ -315,7 +315,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       Container(
                         decoration: BoxDecoration(
                             border: Border.all(
-                                color: Theme.of(context).primaryColor)),
+                                color: Theme.of(context).primaryColor),
+                        ),
                         child: ExpansionTile(
                           key: GlobalKey(),
                           title: Text('$uniName'),

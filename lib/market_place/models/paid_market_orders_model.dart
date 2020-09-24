@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ohostel_hostel_agent_app/market_place/market_methods.dart';
 import 'package:uuid/uuid.dart';
 
 class PaidOrderModel {
@@ -13,6 +14,7 @@ class PaidOrderModel {
   List listOfShopsPurchasedFrom;
   List orders;
   String id = Uuid().v1().toString();
+  bool doneWith;
 
   PaidOrderModel({
     @required this.buyerFullName,
@@ -36,6 +38,7 @@ class PaidOrderModel {
     this.listOfShopsPurchasedFrom = mapData['listOfShopsPurchasedFrom'];
     this.orders = mapData['orders'];
     this.id = mapData['id'];
+    this.doneWith = mapData['doneWith'];
   }
 
   Map toMap() {
@@ -50,6 +53,7 @@ class PaidOrderModel {
     data['listOfShopsPurchasedFrom'] = this.listOfShopsPurchasedFrom;
     data['orders'] = this.orders;
     data['id'] = this.id;
+    data['doneWith'] = false;
 
     return data;
   }
@@ -107,3 +111,4 @@ class EachPaidOrderModel {
     return data;
   }
 }
+

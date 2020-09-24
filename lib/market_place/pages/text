@@ -1,0 +1,68 @@
+'Foodstuf':{
+'1': 'Grains and Rice'
+'2': 'Oil'
+'3': 'Canned Foods'
+'4': 'Spices and Seasonings'
+'5': 'Juices, Soft Drinks and Water'
+'6': 'Sugars'
+'7': 'Noodles and Pasta'
+'8': 'Breakfast and Beverages'},
+
+
+'Hostel Cleaning':{
+'1': 'Laundry'
+'2': 'Dish washing'
+'3': 'Bathroom and Toilet cleaners'
+'4': 'Air Fresheners'
+'5': 'Toilet Paper'
+'6': 'Disinfectant Wipes'},
+
+
+'Bed and Beddings':{
+'1': 'Mattress'
+'2': 'Blanket and Duvet'
+'3': 'Bed Cover'
+'4': 'Pillow and Home Decor'},
+
+
+'Men Fashion':{
+'1': 'Clothing'
+'2': 'Men Shoes'
+'3': 'Men Accessories'
+'4': 'Men Watches'},
+
+
+'Women Fashion':{
+'1': 'Clothing'
+'2': 'Women Shoes'
+'3': 'Women Accessories'
+'4': 'Women Watches'},
+
+
+'Educational Needs':{
+'1': 'Board and Accessories'
+'2': 'School Bags'
+'3': 'School Shoes'
+'4': 'Canvas'},
+
+
+'Health and Beauty':
+'1': 'Hair Care'
+'2': 'Body Care'
+'3': 'Fragrance and Perfume'
+'4': 'Make Up'
+'5': 'Teeth'
+'6': 'Health and Personal Care',
+
+
+ 'Phone and Tablets':
+'1': 'Phones'
+'2': 'Tablets'
+'3': 'Mobile Phone Accessories',
+
+'Stationeries':
+'1': 'Books'
+'2': 'Writing Materials'
+'3': 'Calculators'
+'4': 'Engineering Needs'
+'5': 'Handouts and Materials',

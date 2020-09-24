@@ -10,6 +10,9 @@ import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 class AuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  final CollectionReference shopOwnerDataCollectionRef =
+      Firestore.instance.collection('shopOwnersData');
+
   // create login user object
   LoginUserModel userFromFirebase(FirebaseUser user) {
     return user != null ? LoginUserModel(uid: user.uid) : null;
@@ -54,34 +57,43 @@ class AuthService {
   }) async {
     try {
       AuthResult result = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
       FirebaseUser user = result.user;
 
 //      await getUserDetails(uid: user.uid);
 
 //      return userFromFirebase(user);
 
-      // add user details to  shop firestore database
-      await AuthDatabaseMethods().createShopOwnerDataInFirestore(
-        uid: user.uid,
-        email: email,
-        fullName: fullName,
-        address: address,
-        shopName: shopName,
-        phoneNumber: phoneNumber,
-        uniName: uniName,
-      );
+      //TODO: implement checking if user already exist as a shop owner be4
+      //TODO: implement checking if user already exist as a shop owner be4
+      //TODO: implement checking if user already exist as a shop owner be4
+      //TODO: implement checking if user already exist as a shop owner be4 creating new shop owner
 
-      // save user info to local database using hive
-      saveUserDataToDb(userData: {
-        'uid': user.uid,
-        'email': email,
-        'fullName': fullName,
-        'shopName': shopName,
-        'address': address,
-        'phoneNumber': phoneNumber,
-        'uniName': uniName,
-      });
+      if (user.uid != null) {
+        // add user details to  shop firestore database
+        await AuthDatabaseMethods().createShopOwnerDataInFirestore(
+          uid: user.uid,
+          email: email,
+          fullName: fullName,
+          address: address,
+          shopName: shopName,
+          phoneNumber: phoneNumber,
+          uniName: uniName,
+        );
+
+        // save user info to local database using hive
+        await saveUserDataToDb(userData: {
+          'uid': user.uid,
+          'email': email,
+          'fullName': fullName,
+          'shopName': shopName,
+          'address': address,
+          'phoneNumber': phoneNumber,
+          'uniName': uniName,
+        });
+      }
 
       return userFromFirebase(user);
     } catch (e) {
@@ -103,14 +115,12 @@ class AuthService {
   }
 
   Future getUserDetails({@required String uid}) async {
-    final CollectionReference userDataCollectionRef =
-        Firestore.instance.collection('userData');
     print(
         'uuuuuuuuuuuuuuuuuuuuuuuuiiiiiiiiiiiiiiiiiiiiiiiiiiiiddddddddddddddddddd');
     print(uid.trim());
     try {
       DocumentSnapshot document =
-          await userDataCollectionRef.document(uid).get();
+          await shopOwnerDataCollectionRef.document(uid).get();
       print('pppppppppppppppppppppppppppppppppppppppppppppppppppppp');
       print(document.data);
       saveUserDataToDb(userData: document.data);
