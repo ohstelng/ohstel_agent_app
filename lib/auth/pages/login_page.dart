@@ -84,6 +84,8 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 
+  bool _obscureText = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,13 +93,13 @@ class _LogInPageState extends State<LogInPage> {
           ? SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             child: Form(
               key: formKey,
               child: Column(
                 children: <Widget>[
-                  Spacer(flex: 2,),
-                  SvgPicture.asset("ohstel.svg"),
-
+                  Spacer(flex: 1),
+                  Image.asset("asset/ohstel.png"),
                   Container(
                     height: 100,
                     child: Center(
@@ -151,6 +153,15 @@ class _LogInPageState extends State<LogInPage> {
 
   Widget passwordInputFieldBox() {
     return CustomTextField(
+      icon: true,
+      obscureText: _obscureText,
+      iconName: GestureDetector(
+        child: Icon(
+            _obscureText ? Icons.visibility_off : Icons.visibility),
+        onTap: () {
+          setState(() => _obscureText = !_obscureText);
+        },
+      ),
       labelText: "Password",
       validator: (value) {
       if (value.trim().isEmpty) {
@@ -159,32 +170,27 @@ class _LogInPageState extends State<LogInPage> {
         return null;
       }
     }, onSaved: (value) => password = value.trim(),);
+
      }
 
   Widget logInButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: LongButton(
+    return LongButton(
         labelColor: Colors.white,
         label: "Sign In",
         onPressed: () => validateAndSave(),
         color: Styles.themePrimary,
-      ),
-    );
+      );
   }
 
   Widget signUpButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: LongButton(
+    return LongButton(
         border: true,
         borderColor: Styles.themePrimary,
         labelColor: Styles.themePrimary,
         label: "Register",
         onPressed: () => widget.toggleView(),
         color: Colors.white,
-      ),
-    );
+      );
   }
 
   Widget forgotPassword() {

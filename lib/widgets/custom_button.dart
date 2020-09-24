@@ -20,12 +20,9 @@ class LongButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
       height: 59,
-      margin: EdgeInsets.only(
-        bottom: 15,top: 16
-      ),
-      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         border: border ? Border.all(color: borderColor):null,
         borderRadius: BorderRadius.circular(10),
