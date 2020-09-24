@@ -4,6 +4,7 @@ import 'package:ohostel_hostel_agent_app/auth/models/login_user_model.dart';
 import 'package:ohostel_hostel_agent_app/auth/wrapper.dart';
 import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:provider/provider.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
 void main() {
   // init hive
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.deepOrange,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Wrapper(),
