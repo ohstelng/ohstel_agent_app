@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/auth/methods/auth_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/pages/food_home.dart';
 
-import 'file:///C:/Users/olamilekan/flutter_projects/work_space/ohostel_hostel_agent_app/lib/hostel_booking/hoste_home_page.dart';
+import '../hostel_booking/hoste_home_page.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
