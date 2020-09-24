@@ -292,7 +292,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         margin:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
+
                             border: Border.all(color: Styles.themePrimary)),
+
                         child: ExpansionTile(
                           key: GlobalKey(),
                           title: Text('$uniName'),

@@ -41,7 +41,7 @@ class AuthDatabaseMethods {
     @required String phoneNumber,
     @required String uniName,
   }) {
-    return userDataCollectionRef.document(uid).setData(
+    return shopOwnerDataCollectionRef.document(uid).setData(
       {
         'uid': uid,
         'email': email,

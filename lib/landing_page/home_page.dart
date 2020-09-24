@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ohostel_hostel_agent_app/auth/methods/auth_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/pages/food_home.dart';
+
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
+import 'package:ohostel_hostel_agent_app/market_place/pages/market_home_page.dart';
+
 
 import '../hostel_booking/hoste_home_page.dart';
 
@@ -85,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 8),
                   height: 135,
@@ -115,6 +119,8 @@ class _HomePageState extends State<HomePage> {
                         )
                       ],
                     ),
+
+              
                   ),
                 ),
               ],

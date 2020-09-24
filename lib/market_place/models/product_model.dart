@@ -15,7 +15,7 @@ class ProductModel {
   int productShopOwnerPhoneNumber;
   Timestamp dateAdded;
   List<String> searchKeys;
-  String id = Uuid().v1().toString();
+  String id;
 
   ProductModel({
     @required this.productName,
@@ -75,7 +75,7 @@ class ProductModel {
         this.productShopOwnerPhoneNumber.toString();
     data['productPrice'] = this.productPrice;
     data['dateAdded'] = Timestamp.now();
-    data['id'] = this.id;
+    data['id'] = Uuid().v1().toString();
     data['searchKeys'] = _searchKeys;
 
     return data;

@@ -4,52 +4,41 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
-import 'package:ohostel_hostel_agent_app/hostel_booking/methods.dart';
-import 'package:ohostel_hostel_agent_app/hostel_booking/model/hostel_model.dart';
+import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
+import 'package:ohostel_hostel_agent_app/market_place/market_methods.dart';
+import 'package:ohostel_hostel_agent_app/market_place/models/product_model.dart';
 import 'package:uuid/uuid.dart';
 
-class UploadHostelPage extends StatefulWidget {
+class AddNewMarketProductPage extends StatefulWidget {
   @override
-  _UploadHostelPageState createState() => _UploadHostelPageState();
+  _AddNewMarketProductPageState createState() =>
+      _AddNewMarketProductPageState();
 }
 
-class _UploadHostelPageState extends State<UploadHostelPage> {
+class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
   final formKey = GlobalKey<FormState>();
   StreamController _uniNameController = StreamController.broadcast();
-  TextEditingController distanceTextEditingController = TextEditingController();
-  TextEditingController distanceTimeTextEditingController =
-      TextEditingController();
-  Location location = new Location();
-  bool _serviceEnabled;
-  bool isLoading = false;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
-  String apiKey = 'AIzaSyBHxUKxPLl8cAgGGq-Be9fjsV1ruV3W9iE';
-  Map<String, double> destination = {'lat': 8.480339, 'long': 4.637326};
-
-//  List<Asset> images = List<Asset>();
+  TextEditingController shopNameController = TextEditingController();
+  TextEditingController shopEmailController = TextEditingController();
+  TextEditingController shopPhoneNumberController = TextEditingController();
+  String productShopName;
+  String productName;
+  int productPrice;
+  int productShopOwnerPhoneNumber;
+  String productShopOwnerEmail;
+  String productDescription;
+  String productOriginLocation;
+  String productCategory;
+  String productSubCategory;
   List<File> imagesFiles = List<File>();
-  String hostelName;
-  String hostelLocation;
-  String hostelAreaName;
-  int price;
-  int bedSpace;
-  String distanceFromSchoolInKm;
-  String distanceTime;
-  bool isSchoolHostel = false;
-  String description;
-  String extraFeatures;
-  String landMark;
-  String dormType = 'Select Dorm Type';
+
   String uniName;
-  String hostelAccommodationType = 'Accommodation Type';
-  String type;
+  List<String> subCategory;
   bool isSending = false;
+  bool loading = true;
 
   Future getUniList() async {
     String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
@@ -140,71 +129,6 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
     );
   }
 
-  Future<void> getUserLatAndLong() async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    try {
-      _locationData = await location.getLocation();
-      print(_locationData);
-
-      getRouteCoordinates(
-        originLat: _locationData.latitude,
-        originLong: _locationData.longitude,
-      );
-    } catch (e) {
-      print(e);
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> getRouteCoordinates({
-    @required double originLat,
-    @required double originLong,
-  }) async {
-    String url = "https://maps.googleapis.com/maps/api/directions/json?origin"
-        "=$originLat,$originLong&destination=${destination['lat']},"
-        "${destination['long']}&key=$apiKey";
-
-    http.Response response = await http.get(url);
-    Map values = jsonDecode(response.body);
-
-    print(values['routes'][0]['legs'][0]['distance']);
-    print(values['routes'][0]['legs'][0]['duration']);
-    if (mounted) {
-      setState(() {
-        distanceTextEditingController.text =
-            values['routes'][0]['legs'][0]['distance']['text'];
-        distanceTimeTextEditingController.text =
-            values['routes'][0]['legs'][0]['duration']['text'];
-        isLoading = false;
-      });
-    }
-  }
-
   Future<void> loadAssets() async {
     setState(() {
       imagesFiles = List<File>();
@@ -219,8 +143,8 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         allowedExtensions: ['jpg', 'png', 'jpg'],
       );
 
-      if(result != null) {
-         files = result.paths.map((path) => File(path)).toList();
+      if (result != null) {
+        files = result.paths.map((path) => File(path)).toList();
       }
 
 //      List<File> files = await FilePicker.getMultiFile();
@@ -252,24 +176,20 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
     if (imageUrl.length == imagesFiles.length) {
       print('got here');
 
-      HostelModel hostel = HostelModel(
-        hostelName: hostelName,
-        hostelLocation: hostelLocation,
-        price: price,
-        distanceFromSchoolInKm: distanceFromSchoolInKm,
-        bedSpace: bedSpace,
-        isSchoolHostel: isSchoolHostel,
-        description: description,
-        extraFeatures: extraFeatures,
-        imageUrl: imageUrl,
-        dormType: dormType,
-        landMark: landMark,
-        hostelAccommodationType: hostelAccommodationType,
-        uniName: uniName,
-        distanceTime: distanceTime,
+      ProductModel productModel = ProductModel(
+        productName: productName,
+        imageUrls: imageUrl,
+        productCategory: productCategory,
+        productOriginLocation: productOriginLocation,
+        productDescription: productDescription,
+        productSubCategory: productSubCategory,
+        productPrice: productPrice,
+        productShopName: productShopName,
+        productShopOwnerEmail: productShopOwnerEmail,
+        productShopOwnerPhoneNumber: productShopOwnerPhoneNumber,
       );
-      print(hostel.toMap());
-      await HostelBookingMethods().saveHostelToServer(hostelModel: hostel);
+      print(productModel.toMap());
+      await MarketMethods().saveProductToServer(productModel: productModel);
     }
   }
 
@@ -294,15 +214,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
 
   Future<void> saveData() async {
     if (formKey.currentState.validate() &&
-        dormType != 'Select Dorm Type' &&
-        hostelAccommodationType != 'Accommodation Type' &&
-        imagesFiles.isNotEmpty &&
-        uniName != null) {
+        productOriginLocation != null &&
+        imagesFiles.isNotEmpty) {
       formKey.currentState.save();
       print('pass');
-      print('$hostelName');
-      print('$hostelAccommodationType');
-
       setState(() {
         isSending = true;
       });
@@ -317,16 +232,24 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
     }
   }
 
-  @override
-  void initState() {
-    _uniNameController.add('none selected');
-    super.initState();
+  Future<void> getData() async {
+    setState(() {
+      loading = true;
+    });
+    Map data = await HiveMethods().getUserData();
+    shopNameController.text = data['shopName'];
+    shopEmailController.text = data['email'];
+    shopPhoneNumberController.text = data['phoneNumber'];
+    print(data);
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
-  void dispose() {
-    _uniNameController.close();
-    super.dispose();
+  void initState() {
+    getData();
+    super.initState();
   }
 
   @override
@@ -342,11 +265,13 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         ),
       ),
 //      body: SingleChildScrollView(child: form()),
-      body: ListView(
-        children: <Widget>[
-          form(),
-        ],
-      ),
+      body: loading
+          ? Center(child: CircularProgressIndicator())
+          : ListView(
+              children: <Widget>[
+                form(),
+              ],
+            ),
     );
   }
 
@@ -358,19 +283,20 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         children: <Widget>[
           Container(
             child: TextFormField(
+              controller: shopNameController,
               validator: (value) {
                 if (value.trim().isEmpty) {
-                  return 'Hotel Name Can\'t Be Empty';
+                  return 'Product Shop Name Can\'t Be Empty';
                 } else if (value.trim().length < 3) {
-                  return 'Hotel Name Must Be More Than 2 Characters';
+                  return 'Product Shop Name Must Be More Than 2 Characters';
                 } else {
                   return null;
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Hotel Name',
+                labelText: 'Product Shop Name',
               ),
-              onSaved: (value) => hostelName = value.trim(),
+              onSaved: (value) => productShopName = value.trim(),
             ),
             padding: EdgeInsets.symmetric(horizontal: 15),
           ),
@@ -378,15 +304,15 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             child: TextFormField(
               validator: (value) {
                 if (value.trim().isEmpty) {
-                  return 'Hotel Loaction Can\'t Be Empty';
+                  return 'Product Name Can\'t Be Empty';
                 } else {
                   return null;
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Hotel Loaction',
+                labelText: 'Product Name',
               ),
-              onSaved: (value) => hostelLocation = value.trim(),
+              onSaved: (value) => productName = value.trim(),
             ),
             padding: EdgeInsets.symmetric(horizontal: 15),
           ),
@@ -394,15 +320,16 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             child: TextFormField(
               validator: (value) {
                 if (value.trim().isEmpty) {
-                  return 'Hotel Area Name Can\'t Be Empty';
+                  return 'Product Price Can\'t Be Empty';
                 } else {
                   return null;
                 }
               },
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: 'Hotel Area Name',
+                labelText: 'Product Price',
               ),
-              onSaved: (value) => hostelAreaName = value.trim(),
+              onSaved: (value) => productPrice = int.parse(value.trim()),
             ),
             padding: EdgeInsets.symmetric(horizontal: 15),
           ),
@@ -413,18 +340,19 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                   flex: 1,
                   child: Container(
                     child: TextFormField(
-                      keyboardType: TextInputType.number,
+                      controller: shopEmailController,
+                      keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value.trim().isEmpty) {
-                          return 'Price Can\'t Be Empty';
+                          return 'Shop Owner Email Can\'t Be Empty';
                         } else {
                           return null;
                         }
                       },
                       decoration: InputDecoration(
-                        labelText: 'Price',
+                        labelText: 'Shop Owner Email',
                       ),
-                      onSaved: (value) => price = int.parse(value.trim()),
+                      onSaved: (value) => productShopOwnerEmail = value.trim(),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 15),
                   ),
@@ -433,18 +361,20 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                   flex: 1,
                   child: Container(
                     child: TextFormField(
+                      controller: shopPhoneNumberController,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value.trim().isEmpty) {
-                          return 'bed Space Can\'t Be Empty';
+                          return 'Shop Owner Phone Number Can\'t Be Empty';
                         } else {
                           return null;
                         }
                       },
                       decoration: InputDecoration(
-                        labelText: 'bed Space',
+                        labelText: 'Shop Owner Phone Number',
                       ),
-                      onSaved: (value) => bedSpace = int.parse(value.trim()),
+                      onSaved: (value) =>
+                          productShopOwnerPhoneNumber = int.parse(value.trim()),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 15),
                   ),
@@ -453,111 +383,19 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             ),
           ),
           Container(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    child: TextFormField(
-                      controller: distanceTextEditingController,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'distance Can\'t Be Empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Distance In KM',
-                      ),
-                      onSaved: (value) => distanceFromSchoolInKm = value.trim(),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    child: TextFormField(
-                      controller: distanceTimeTextEditingController,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'time distance Can\'t Be Empty';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Distance time',
-                      ),
-                      onSaved: (value) => distanceTime = value.trim(),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: FlatButton(
-                    color: Colors.green,
-                    onPressed: () {
-                      getUserLatAndLong();
-                    },
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : Text('Get Distance'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          checkbox(title: 'InSide Campus?', boolValue: isSchoolHostel),
-          Container(
             child: TextFormField(
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
+//                      keyboardType: TextInputType.number,
               validator: (value) {
                 if (value.trim().isEmpty) {
-                  return 'Hotel Description Can\'t Be Empty';
+                  return 'product Description Can\'t Be Empty';
                 } else {
                   return null;
                 }
               },
               decoration: InputDecoration(
-                labelText: 'Hotel Description',
+                labelText: 'product Description',
               ),
-              onSaved: (value) => description = value.trim(),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 15),
-          ),
-          Container(
-            child: TextFormField(
-              validator: (value) {
-                if (value.trim().isEmpty) {
-                  return 'Hotel Features Can\'t Be Empty';
-                } else {
-                  return null;
-                }
-              },
-              decoration: InputDecoration(
-                labelText: 'Hotel Features',
-              ),
-              onSaved: (value) => extraFeatures = value.trim(),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 15),
-          ),
-          Container(
-            child: TextFormField(
-              validator: (value) {
-                if (value.trim().isEmpty) {
-                  return 'Hotel Features Can\'t Be Empty';
-                } else {
-                  return null;
-                }
-              },
-              decoration: InputDecoration(
-                labelText: 'Any Land Mark Close By?',
-              ),
-              onSaved: (value) => landMark = value.trim(),
+              onSaved: (value) => productDescription = value.trim(),
             ),
             padding: EdgeInsets.symmetric(horizontal: 15),
           ),
@@ -570,7 +408,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                   onPressed: () {
                     _showEditUniDailog();
                   },
-                  child: Text('Select Uni'),
+                  child: Text('Select Location'),
                 ),
                 Container(
                   padding: EdgeInsets.all(10.0),
@@ -581,9 +419,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                     stream: _uniNameController.stream,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return Text('No Uni Selected');
+                        return Text('No Loacation Selected');
                       } else {
                         uniName = snapshot.data;
+                        productOriginLocation = snapshot.data;
                         return Text('${snapshot.data}');
                       }
                     },
@@ -592,14 +431,58 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
               ],
             ),
           ),
-          Container(
-            child: Row(
-              children: <Widget>[
-                Expanded(child: dormTypeDropDown()),
-                Expanded(child: accommodationTypeDropDown()),
-              ],
-            ),
+          SizedBox(height: 20),
+          DropdownButton(
+            // select Category
+            hint: Text("Select Category"),
+            value: productCategory,
+            onChanged: (value) {
+              setState(() {
+                subCategory = categoryMap['$value'];
+                print(categoryMap['$value']);
+
+                productCategory = value;
+              });
+            },
+            items: categoryMap.keys.map((element) {
+              return DropdownMenuItem(
+                value: element,
+                child: Text(
+                  element,
+                  style: TextStyle(color: Colors.black),
+                ),
+              );
+            }).toList(),
           ),
+          SizedBox(height: 10),
+          subCategory != null
+              ? DropdownButton(
+                  // select  sub Category
+                  hint: Text("Select Sub Category"),
+                  value: productSubCategory,
+                  onChanged: (value) {
+                    setState(() {
+                      productSubCategory = value;
+                    });
+                  },
+                  items: subCategory.map((element) {
+                    return DropdownMenuItem(
+                      value: element,
+                      child: Text(
+                        element,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  }).toList(),
+                )
+              : Container(
+                  padding: EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                  ),
+                  child: Text('Select A Category First!!'),
+                ),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -628,6 +511,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             ],
           ),
           buildGridView(),
+          SizedBox(height: 30),
           isSending
               ? Center(child: CircularProgressIndicator())
               : FlatButton(
@@ -639,102 +523,6 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                 ),
         ],
       ),
-    );
-  }
-
-  Widget checkbox({String title, bool boolValue}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(title),
-        Checkbox(
-          value: boolValue,
-          onChanged: (bool value) {
-            print(value);
-            setState(() {
-              switch (title) {
-                case "Need RoomMate?":
-//                  isRoomMateNeeded = value;
-                  break;
-                case "InSide Campus?":
-                  isSchoolHostel = value;
-                  break;
-              }
-            });
-          },
-        )
-      ],
-    );
-  }
-
-  Widget dormTypeDropDown() {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: DropdownButton(
-          hint: Text('$dormType'),
-          items: [
-            DropdownMenuItem(
-              child: Text("Boys Only"),
-              value: 'Boys Only',
-            ),
-            DropdownMenuItem(
-              child: Text("Girls Only"),
-              value: 'Girls Only',
-            ),
-            DropdownMenuItem(
-              child: Text("Mixed"),
-              value: 'Mixed',
-            ),
-          ],
-          onChanged: (value) {
-            setState(() {
-              dormType = value;
-            });
-          }),
-    );
-  }
-
-  Widget accommodationTypeDropDown() {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: DropdownButton(
-          hint: Text('$hostelAccommodationType'),
-          items: [
-            DropdownMenuItem(
-              child: Text("Self Contain"),
-              value: 'Self Contain',
-            ),
-            DropdownMenuItem(
-              child: Text("Single Room"),
-              value: 'Single Room',
-            ),
-            DropdownMenuItem(
-              child: Text("2 Bedroom Flat"),
-              value: '2 Bedroom Flat',
-            ),
-            DropdownMenuItem(
-              child: Text("1 Bedroom Flat"),
-              value: '1 Bedroom Flat',
-            ),
-            DropdownMenuItem(
-              child: Text("2 In A Room"),
-              value: '2 In A Room',
-            ),
-            DropdownMenuItem(
-              child: Text("3 In A Room"),
-              value: '3 In A Room',
-            ),
-            DropdownMenuItem(
-              child: Text("4 In A Room"),
-              value: '4 In A Room',
-            ),
-          ],
-          onChanged: (value) {
-            setState(() {
-              hostelAccommodationType = value;
-              type = value;
-            });
-          }),
     );
   }
 
@@ -778,3 +566,68 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
       );
   }
 }
+
+Map categoryMap = {
+  'Foodstuff': [
+    'Grains and Rice',
+    'Oil',
+    'Canned Foods',
+    'Spices and Seasonings',
+    'Juices, Soft Drinks and Water',
+    'Sugars',
+    'Noodles and Pasta',
+    'Breakfast and Beverages',
+  ],
+  'Hostel Cleaning': [
+    'Laundry',
+    'Dish washing',
+    'Bathroom and Toilet cleaners',
+    'Air Fresheners',
+    'Toilet Paper',
+    'Disinfectant Wipes',
+  ],
+  'Bed and Beddings': [
+    'Mattress',
+    'Blanket and Duvet',
+    'Bed Cover',
+    'Pillow and Home Decor',
+  ],
+  'Men Fashion': [
+    'Clothing',
+    'Men Shoes',
+    'Men Accessories',
+    'Men Watches',
+  ],
+  'Women Fashion': [
+    'Clothing',
+    'Women Shoes',
+    'Women Accessories',
+    'Women Watches',
+  ],
+  'Educational Needs': [
+    'Board and Accessories',
+    'School Bags',
+    'School Shoes',
+    'Canvas',
+  ],
+  'Health and Beauty': [
+    'Hair Care',
+    'Body Care',
+    'Fragrance and Perfume',
+    'Make Up',
+    'Teeth',
+    'Health and Personal Care',
+  ],
+  'Phone and Tablets': [
+    'Phones',
+    'Tablets',
+    'Mobile Phone Accessories',
+  ],
+  'Stationeries': [
+    'Books',
+    'Writing Materials',
+    'Calculators',
+    'Engineering Needs',
+    'Handouts and Materials',
+  ],
+};
