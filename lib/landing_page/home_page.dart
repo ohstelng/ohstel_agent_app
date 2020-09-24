@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                   await AuthService().signOut();
                 }),
             Spacer(
-              flex: 2,
+              flex: 3,
             )
           ],
         ),
