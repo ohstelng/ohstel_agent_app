@@ -1,5 +1,7 @@
 import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -118,190 +120,196 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add New Extra Food Item'),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back_ios),
-        ),
-      ),
-      body: ListView(
-        children: [
-          Form(
-            key: formKey,
-            child: Column(
-              children: [
-                Container(
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value.trim().isEmpty) {
-                        return 'Fast Food Name Can\'t Be Empty';
-                      } else if (value.trim().length < 3) {
-                        return 'Fast Food Name Must Be More Than 2 Characters';
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Fast Food Name',
-                    ),
-                    onSaved: (value) => fastFoodName = value.trim(),
+      body: Container(
+        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: ListView(
+          children: [
+            Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Add Extra Food Item',
+                    style: subTitle1TextStyle,
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-                Container(
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value.trim().isEmpty) {
-                        return 'Extra Item Name Can\'t Be Empty';
-                      } else if (value.trim().length < 3) {
-                        return 'Extra Item Name Must Be More Than 2 Characters';
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Extra Item Name (e.g meat)',
-                    ),
-                    onSaved: (value) => _extraItemName = value.trim(),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: DropdownButton(
-                        hint: Text('None Selected'),
-                        value: _value,
-                        items: [
-                          DropdownMenuItem(
-                            child: Text("Cooked Food"),
-                            value: 1,
-                          ),
-                          DropdownMenuItem(
-                            child: Text("Snacks"),
-                            value: 2,
-                          ),
-                        ],
-                        onChanged: (value) {
-                          String val;
-                          if (value == 1) {
-                            val = 'cookedFood';
-                          } else {
-                            val = 'snacks';
-                          }
-                          setState(() {
-                            _value = value;
-                            _extraItemCategory = val;
-                          });
-                        },
+                  Container(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value.trim().isEmpty) {
+                          return 'Fast Food Name Can\'t Be Empty';
+                        } else if (value.trim().length < 3) {
+                          return 'Fast Food Name Must Be More Than 2 Characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Fast Food Name',
                       ),
+                      onSaved: (value) => fastFoodName = value.trim(),
                     ),
-                    Expanded(
-                      child: Container(
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.done,
-                          validator: (value) {
-                            if (value.trim().isEmpty) {
-                              return 'Extra Item Price Can\'t Be Empty';
-                            } else if (value.trim().length < 3) {
-                              return 'Extra Item Price Must Be More Than 2 Characters';
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: boxDec,
+                  ),
+                  Container(
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value.trim().isEmpty) {
+                          return 'Extra Item Name Can\'t Be Empty';
+                        } else if (value.trim().length < 3) {
+                          return 'Extra Item Name Must Be More Than 2 Characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Extra Item Name (e.g meat)',
+                      ),
+                      onSaved: (value) => _extraItemName = value.trim(),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: boxDec,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        decoration: boxDec,
+                        child: DropdownButton(
+                          underline: SizedBox(),
+                          hint: Text('None Selected'),
+                          value: _value,
+                          items: [
+                            DropdownMenuItem(
+                              child: Text("Cooked Food"),
+                              value: 1,
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Snacks"),
+                              value: 2,
+                            ),
+                          ],
+                          onChanged: (value) {
+                            String val;
+                            if (value == 1) {
+                              val = 'cookedFood';
                             } else {
-                              return null;
+                              val = 'snacks';
                             }
+                            setState(() {
+                              _value = value;
+                              _extraItemCategory = val;
+                            });
                           },
-                          decoration: InputDecoration(
-                            labelText: 'Extra Item Price',
-                          ),
-                          onSaved: (value) =>
-                              _extraItemPrice = int.parse(value.trim()),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 15),
                       ),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: TextFormField(
-                    maxLines: null,
-                    validator: (value) {
-                      if (value.trim().isEmpty) {
-                        return 'desc Can\'t Be Empty';
-                      } else if (value.trim().length < 3) {
-                        return 'desc Must Be More Than 2 Characters';
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'short Description',
-                    ),
-                    onSaved: (value) => _desc = value.trim(),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.only(left: 8),
+                          decoration: boxDec,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.done,
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return 'Extra Item Price Can\'t Be Empty';
+                              } else if (value.trim().length < 3) {
+                                return 'Extra Item Price Must Be More Than 2 Characters';
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Extra Item Price',
+                            ),
+                            onSaved: (value) =>
+                                _extraItemPrice = int.parse(value.trim()),
+                          ),
+                          ),
+                      ),
+                    ],
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(10.0),
-                      child: FlatButton(
-                        onPressed: () {
-                          selectItemImage();
-                        },
-                        color: Colors.green,
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: boxDec,
+                    child: TextFormField(
+                      maxLines: null,
+                      validator: (value) {
+                        if (value.trim().isEmpty) {
+                          return 'desc Can\'t Be Empty';
+                        } else if (value.trim().length < 3) {
+                          return 'desc Must Be More Than 2 Characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Short Description',
+                      ),
+                      onSaved: (value) => _desc = value.trim(),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(10.0),
                         child: Text(
                           'Select Item Image',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: titleTextStyle,
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Colors.grey,
-                      ),
-                      child: (_extraFoodImage == null)
-                          ? Container(
-                              height: 150,
-                              width: 150,
-                              child: Icon(
-                                Icons.image,
-                                color: Colors.black,
-                              ),
-                            )
-                          : Container(
-                              height: 200,
-                              width: 250,
-                              child: Image.file(
-                                _extraFoodImage,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 50),
-                isSending
-                    ? CircularProgressIndicator()
-                    : FlatButton(
-                        color: Colors.green,
-                        onPressed: () {
-                          saveData();
+                      InkWell(
+                        onTap: () {
+                          selectItemImage();
                         },
-                        child: Text('Save'),
-                      ),
-              ],
-            ),
-          )
-        ],
+                        child: Container(
+                          decoration: boxDec,
+                          child: (_extraFoodImage == null)
+                              ? Container(
+                                  height: 150,
+                                  width: 150,
+                                  child: Icon(
+                                    Icons.add_a_photo,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              : Container(
+                                  height: 200,
+                                  width: 250,
+                                  child: Image.file(
+                                    _extraFoodImage,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 50),
+                  isSending
+                      ? CircularProgressIndicator()
+                      : LongButton(
+                          onPressed: () {
+                            saveData();
+                          },
+                          label: 'Save',
+                        ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
