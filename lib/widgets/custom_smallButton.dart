@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
-class LongButton extends StatelessWidget {
+
+class ShortButton extends StatelessWidget {
   final bool shadow;
   final bool border;
   final Color borderColor;
@@ -8,9 +9,9 @@ class LongButton extends StatelessWidget {
   final Color labelColor;
   final String label;
   final Function onPressed;
-  const LongButton({
+  const ShortButton({
     Key key,
-    this.color = Styles.themePrimary ,
+    this.color = Styles.themePrimary,
     @required this.onPressed,
     this.labelColor = Colors.white,
     @required this.label,
@@ -20,9 +21,9 @@ class LongButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 59,
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      height: 45,
       margin: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
-      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         border: border ? Border.all(color: borderColor):null,
         borderRadius: BorderRadius.circular(10),
@@ -42,13 +43,13 @@ class LongButton extends StatelessWidget {
         ),
         color: color,
         padding: EdgeInsets.symmetric(
-          vertical: 10,
+          vertical: 10,horizontal: 8
         ),
         onPressed: onPressed,
         child: Text(
           label ?? "",
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 16,
             color: labelColor,
           ),
         ),
