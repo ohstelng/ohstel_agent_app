@@ -74,10 +74,9 @@ class _HomePageState extends State<HomePage> {
                           height: 8,
                         ),
                         Text(
-                          'Hostel Agent App',
+                          'Hostel Agent ',
                           style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             color: Colors.black,
                           ),
                         )
@@ -106,10 +105,9 @@ class _HomePageState extends State<HomePage> {
                           height: 8,
                         ),
                         Text(
-                          'Food Agent App',
+                          'Food Agent',
                           style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             color: Colors.black,
                           ),
                         )
