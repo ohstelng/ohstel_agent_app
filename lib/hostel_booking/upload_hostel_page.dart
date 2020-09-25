@@ -593,6 +593,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
               padding: EdgeInsets.symmetric(horizontal: 8),
               margin: EdgeInsets.symmetric(vertical: 8)),
           Container(
+            margin: EdgeInsets.symmetric(vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -738,44 +739,46 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   Widget accommodationTypeDropDown() {
     return Container(
       padding: EdgeInsets.all(20.0),
-      child: DropdownButton(
-          hint: Text('$hostelAccommodationType'),
-          items: [
-            DropdownMenuItem(
-              child: Text("Self Contain"),
-              value: 'Self Contain',
-            ),
-            DropdownMenuItem(
-              child: Text("Single Room"),
-              value: 'Single Room',
-            ),
-            DropdownMenuItem(
-              child: Text("2 Bedroom Flat"),
-              value: '2 Bedroom Flat',
-            ),
-            DropdownMenuItem(
-              child: Text("1 Bedroom Flat"),
-              value: '1 Bedroom Flat',
-            ),
-            DropdownMenuItem(
-              child: Text("2 In A Room"),
-              value: '2 In A Room',
-            ),
-            DropdownMenuItem(
-              child: Text("3 In A Room"),
-              value: '3 In A Room',
-            ),
-            DropdownMenuItem(
-              child: Text("4 In A Room"),
-              value: '4 In A Room',
-            ),
-          ],
-          onChanged: (value) {
-            setState(() {
-              hostelAccommodationType = value;
-              type = value;
-            });
-          }),
+      child: SingleChildScrollView(
+        child: DropdownButton(
+            hint: Text('Accommodation'),
+            items: [
+              DropdownMenuItem(
+                child: Text("Self Contain"),
+                value: 'Self Contain',
+              ),
+              DropdownMenuItem(
+                child: Text("Single Room"),
+                value: 'Single Room',
+              ),
+              DropdownMenuItem(
+                child: Text("2 Bedroom Flat"),
+                value: '2 Bedroom Flat',
+              ),
+              DropdownMenuItem(
+                child: Text("1 Bedroom Flat"),
+                value: '1 Bedroom Flat',
+              ),
+              DropdownMenuItem(
+                child: Text("2 In A Room"),
+                value: '2 In A Room',
+              ),
+              DropdownMenuItem(
+                child: Text("3 In A Room"),
+                value: '3 In A Room',
+              ),
+              DropdownMenuItem(
+                child: Text("4 In A Room"),
+                value: '4 In A Room',
+              ),
+            ],
+            onChanged: (value) {
+              setState(() {
+                hostelAccommodationType = value;
+                type = value;
+              });
+            }),
+      ),
     );
   }
 

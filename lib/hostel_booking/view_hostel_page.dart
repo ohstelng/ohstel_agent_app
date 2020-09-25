@@ -3,6 +3,8 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/methods.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart'as Styles;
 
 import 'model/hostel_model.dart';
 
@@ -50,7 +52,7 @@ class _HostelBookingInFoPageState extends State<HostelBookingInFoPage> {
                 child: Text(
                   'Yes',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Styles.themePrimary,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
@@ -100,7 +102,7 @@ class _HostelBookingInFoPageState extends State<HostelBookingInFoPage> {
                 child: Text(
                   'Yes',
                   style: TextStyle(
-                    color: Colors.blue,
+                    color: Styles.themePrimary,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
@@ -141,22 +143,25 @@ class _HostelBookingInFoPageState extends State<HostelBookingInFoPage> {
   Widget footer() {
     if (widget.type == 'inspection') {
       return Container(
-        child: FlatButton(
-          color: Colors.green,
+        child: LongButton(
+          color: Styles.themePrimary,
           onPressed: () {
             confirmInspection();
           },
-          child: Text('Confirm Inspection'),
+          label: 'Confirm Inspection',
+          labelColor: Colors.white,
         ),
       );
     } else if (widget.type == 'paid') {
       return Container(
-        child: FlatButton(
-          color: Colors.green,
+        child: LongButton(
+          color: Styles.themePrimary,
           onPressed: () {
             claimHostel();
           },
-          child: Text('Confrim'),
+
+          labelColor: Colors.white,
+          label: 'Confirm Payment',
         ),
       );
     }

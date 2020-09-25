@@ -4,6 +4,8 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/methods.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/model/hostel_model.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
 class EditHostelPage extends StatefulWidget {
   final HostelModel hostelModel;
@@ -72,14 +74,14 @@ class _EditHostelPageState extends State<EditHostelPage> {
                   });
                 },
                 child: Text('Yes'),
-                color: Colors.green,
+                color: Styles.themePrimary,
               ),
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Text('No'),
-                color: Colors.red,
+                color: Colors.grey,
               ),
             ],
           );
@@ -175,20 +177,24 @@ class _EditHostelPageState extends State<EditHostelPage> {
               ],
             ),
             SizedBox(height: 60),
-            FlatButton(
+            LongButton(
+              color: Styles.themePrimary,
+              label: 'Submit',
               onPressed: () {
                 save();
               },
-              child: Text('Submit'),
-              color: Colors.green,
+              labelColor:Colors.white
+              ,
             ),
             SizedBox(height: 30),
-            FlatButton(
+            LongButton(
               onPressed: () {
                 delete();
               },
-              child: Text('Delete'),
-              color: Colors.red,
+              label: 'Delete',
+              color: Colors.white,
+              border: true,
+              borderColor: Styles.themePrimary,
             ),
           ],
         ),

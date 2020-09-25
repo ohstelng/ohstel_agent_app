@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/model/hostel_booking_inspection_model.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/model/hostel_model.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/view_hostel_page.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
 class ViewInspectionRequestPage extends StatefulWidget {
   @override
@@ -31,73 +33,82 @@ class _ViewInspectionRequestPageState extends State<ViewInspectionRequestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Inspection Requests'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () {
-              reload();
-            },
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: showLoading
-            ? Center(child: CircularProgressIndicator())
-            : PaginateFirestore(
-                scrollDirection: Axis.vertical,
-                itemsPerPage: 10,
-                physics: BouncingScrollPhysics(),
-                initialLoader: Container(
-                  height: 50,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                bottomLoader: Center(
-                  child: CircularProgressIndicator(),
-                ),
-                shrinkWrap: true,
-                query: Firestore.instance
-                    .collection('bookingInspections')
-                    .where('inspectionMade', isEqualTo: false)
-                    .orderBy('timestamp', descending: true),
-                itemBuilder: (_, context, DocumentSnapshot documentSnapshot) {
-                  Map data = documentSnapshot.data;
-                  HostelBookingInspectionModel inspectionModel =
-                      HostelBookingInspectionModel.fromMap(data);
-                  HostelModel hostel =
-                      HostelModel.fromMap(inspectionModel.hostelDetails);
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text('Inspection Requests',style: Styles.subTitle1TextStyle,),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.refresh,color: Colors.black,),
+                    onPressed: () {
+                      reload();
+                    },
+                  )
 
-                  return Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
-                    child: Card(
-                      elevation: 0,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => HostelBookingInFoPage(
-                                hostelModel: hostel,
-                                id: data['id'].toString(),
-                                type: 'inspection',
-                              ),
-                            ),
-                          );
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('name: ${inspectionModel.fullName}'),
-                            Text('email: ${inspectionModel.email}'),
-                            Text(
-                                'phone number: ${inspectionModel.phoneNumber}'),
-                            Text('date: ${inspectionModel.date}'),
-                            Text('time: ${inspectionModel.time}'),
-                          ],
+
+              ],),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                height: MediaQuery.of(context).size.height*0.75,
+                child: showLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : PaginateFirestore(
+                        scrollDirection: Axis.vertical,
+                        itemsPerPage: 10,
+                        physics: BouncingScrollPhysics(),
+                        initialLoader: Container(
+                          height: 50,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
+                        bottomLoader: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        shrinkWrap: true,
+                        query: Firestore.instance
+                            .collection('bookingInspections')
+                            .where('inspectionMade', isEqualTo: false)
+                            .orderBy('timestamp', descending: true),
+                        itemBuilder: (_, context, DocumentSnapshot documentSnapshot) {
+                          Map data = documentSnapshot.data;
+                          HostelBookingInspectionModel inspectionModel =
+                              HostelBookingInspectionModel.fromMap(data);
+                          HostelModel hostel =
+                              HostelModel.fromMap(inspectionModel.hostelDetails);
+
+                          return Container(
+                            decoration: Styles.cardDec,
+                            padding:
+                                EdgeInsets.symmetric(vertical: 8.0,horizontal: 8),
+                            margin: EdgeInsets.symmetric(vertical: 5),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => HostelBookingInFoPage(
+                                      hostelModel: hostel,
+                                      id: data['id'].toString(),
+                                      type: 'inspection',
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('NAME: ${inspectionModel.fullName}',style: Styles.headingTextStyle,),
+                                  Text('E-MAIL: ${inspectionModel.email}'),
+                                  Text(
+                                      'PHONE NUMBER: ${inspectionModel.phoneNumber}'),
+                                  Text('DATE: ${inspectionModel.date}'),
+                                  Text('TIME: ${inspectionModel.time}'),
+                                ],
+                              ),
 //                  child: Row(
 //                    children: <Widget>[
 //                      Container(
@@ -131,11 +142,14 @@ class _ViewInspectionRequestPageState extends State<ViewInspectionRequestPage> {
 //                      )
 //                    ],
 //                  ),
+                            ),
+                          );
+                        }, itemBuilderType: PaginateBuilderType.listView,
                       ),
-                    ),
-                  );
-                }, itemBuilderType: PaginateBuilderType.listView,
               ),
+            ],
+          ),
+        ),
       ),
     );
   }
