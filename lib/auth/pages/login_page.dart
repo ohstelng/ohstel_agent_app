@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ohostel_hostel_agent_app/auth/methods/auth_methods.dart';
 import 'package:ohostel_hostel_agent_app/auth/pages/sigup_page.dart';

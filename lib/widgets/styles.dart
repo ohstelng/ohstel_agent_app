@@ -14,14 +14,16 @@ TextStyle titleTextStyle = TextStyle(
   fontSize: 20,
 );
 TextStyle headingTextStyle = TextStyle(
+  color: Colors.black,
   fontWeight: FontWeight.w500,
-  fontSize: 24,
-);
-TextStyle subTitle1TextStyle = TextStyle(
   fontSize: 16,
 );
+TextStyle subTitle1TextStyle = TextStyle(
+  fontSize: 22,
+);
 TextStyle subTitle2TextStyle = TextStyle(
-  fontSize: 14,
+  color: Colors.black,
+  fontSize: 16,
 );
 TextStyle body1TextStyle = TextStyle(
   fontSize: 16,
@@ -30,6 +32,7 @@ TextStyle body2TextStyle = TextStyle(
   fontSize: 14,
 );
 TextStyle captionTextStyle = TextStyle(
+  color: Colors.black,
   fontSize: 12,
 );
 TextStyle buttonTextStyle = TextStyle(

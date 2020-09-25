@@ -6,10 +6,7 @@ import 'package:ohostel_hostel_agent_app/food/pages/food_home.dart';
 
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
-import 'package:ohostel_hostel_agent_app/market_place/pages/market_home_page.dart';
-
-
-import '../hostel_booking/hoste_home_page.dart';
+import 'package:ohostel_hostel_agent_app/hostel_booking/hoste_home_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -77,10 +74,9 @@ class _HomePageState extends State<HomePage> {
                           height: 8,
                         ),
                         Text(
-                          'Hostel Agent App',
+                          'Hostel Agent ',
                           style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             color: Colors.black,
                           ),
                         )
@@ -88,7 +84,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 8),
                   height: 135,
@@ -110,17 +105,14 @@ class _HomePageState extends State<HomePage> {
                           height: 8,
                         ),
                         Text(
-                          'Food Agent App',
+                          'Food Agent',
                           style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                             color: Colors.black,
                           ),
                         )
                       ],
                     ),
-
-              
                   ),
                 ),
               ],
