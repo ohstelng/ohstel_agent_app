@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.grey[200],
         leading: Padding(padding: EdgeInsets.all(6),child: Image.asset("asset/ohstel.png"),),
-        elevation: 5,
+        elevation: 0,
         title: Text('Management Console',style: TextStyle(color: Colors.black),),
         centerTitle: true,
       ),
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             Spacer(
-              flex: 1,
+              flex: 3,
             ),
             LongButton(
                 color: Styles.themePrimary,
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   await AuthService().signOut();
                 }),
             Spacer(
-              flex: 3,
+              flex: 5,
             )
           ],
         ),
