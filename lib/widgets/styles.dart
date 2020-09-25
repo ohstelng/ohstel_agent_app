@@ -8,6 +8,11 @@ BoxDecoration boxDec = BoxDecoration(
   color: Color(0xfff4f5f6),
   borderRadius: BorderRadius.circular(10),
 );
+BoxDecoration cardDec = BoxDecoration(
+  border: Border.all(color: themePrimary),
+  color: Color(0xfff4f5f6),
+  borderRadius: BorderRadius.circular(10),
+);
 TextStyle underline = TextStyle(decoration: TextDecoration.underline);
 TextStyle titleTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
@@ -19,6 +24,7 @@ TextStyle headingTextStyle = TextStyle(
   fontSize: 16,
 );
 TextStyle subTitle1TextStyle = TextStyle(
+  fontWeight: FontWeight.bold,
   fontSize: 22,
 );
 TextStyle subTitle2TextStyle = TextStyle(

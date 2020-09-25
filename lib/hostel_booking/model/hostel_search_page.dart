@@ -6,6 +6,8 @@ import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/edit_hostel_details_page.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/methods.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/model/hostel_model.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
+
 
 class HostelSearchPage extends StatefulWidget {
   @override
@@ -149,12 +151,15 @@ class _HostelSearchPageState extends State<HostelSearchPage> {
 
   Widget searchBar() {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      decoration: Styles.boxDec,
       margin: EdgeInsets.all(20.0),
       child: TextField(
         onChanged: (val) {
           query = val;
         },
         decoration: InputDecoration(
+          border: InputBorder.none,
           suffixIcon: IconButton(
             onPressed: () {
               startSearch(value: query);
@@ -250,7 +255,7 @@ class _HostelSearchPageState extends State<HostelSearchPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * 0.60,
+            width: MediaQuery.of(context).size.width * 0.70,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -307,7 +312,7 @@ class _HostelSearchPageState extends State<HostelSearchPage> {
   Widget displayMultiPic({@required List imageList}) {
     return Container(
       constraints: BoxConstraints(
-        maxHeight: 250,
+        maxHeight: 300,
         maxWidth: MediaQuery.of(context).size.width * .95,
       ),
       child: Carousel(
@@ -332,7 +337,7 @@ class _HostelSearchPageState extends State<HostelSearchPage> {
         dotSpacing: 15.0,
         dotSize: 4,
         dotIncreaseSize: 2.5,
-        dotIncreasedColor: Colors.teal,
+        dotIncreasedColor: Colors.deepOrange,
         dotBgColor: Colors.transparent,
         animationCurve: Curves.fastOutSlowIn,
         animationDuration: Duration(milliseconds: 2000),
