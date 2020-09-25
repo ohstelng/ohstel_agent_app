@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/rendering.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
-import 'package:ohostel_hostel_agent_app/widgets/custom_smallButton.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -126,7 +125,7 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        margin: EdgeInsets.symmetric(vertical: 24, horizontal: 8),
         child: ListView(
           children: [
             Form(
@@ -261,39 +260,41 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
                     margin: EdgeInsets.symmetric(vertical: 8),
                     decoration: boxDec,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: Text("Item Image",style: titleTextStyle,),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          selectItemImage();
-                        },
-                        child: Container(
-                          decoration: boxDec,
-                          child: (_foodImage == null)
-                              ? Container(
-                                  height: 150,
-                                  width: 150,
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              : Container(
-                                  height: 200,
-                                  width: 250,
-                                  child: Image.file(
-                                    _foodImage,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: Text("Item Image",style: titleTextStyle,),
                         ),
-                      )
-                    ],
+                        InkWell(
+                          onTap: () {
+                            selectItemImage();
+                          },
+                          child: Container(
+                            decoration: boxDec,
+                            child: (_foodImage == null)
+                                ? Container(
+                                    height: 150,
+                                    width: 150,
+                                    child: Icon(
+                                      Icons.add_a_photo,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 200,
+                                    width: 250,
+                                    child: Image.file(
+                                      _foodImage,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(height: 50),
                   isSending

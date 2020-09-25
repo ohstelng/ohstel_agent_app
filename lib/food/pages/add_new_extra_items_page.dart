@@ -121,7 +121,7 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        margin: EdgeInsets.symmetric(vertical: 24, horizontal: 8),
         child: ListView(
           children: [
             Form(
@@ -259,42 +259,44 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
                       onSaved: (value) => _desc = value.trim(),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: Text(
-                          'Select Item Image',
-                          style: titleTextStyle,
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: Text(
+                            'Select Item Image',
+                            style: titleTextStyle,
+                          ),
                         ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          selectItemImage();
-                        },
-                        child: Container(
-                          decoration: boxDec,
-                          child: (_extraFoodImage == null)
-                              ? Container(
-                                  height: 150,
-                                  width: 150,
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.black,
+                        InkWell(
+                          onTap: () {
+                            selectItemImage();
+                          },
+                          child: Container(
+                            decoration: boxDec,
+                            child: (_extraFoodImage == null)
+                                ? Container(
+                                    height: 150,
+                                    width: 150,
+                                    child: Icon(
+                                      Icons.add_a_photo,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 200,
+                                    width: 250,
+                                    child: Image.file(
+                                      _extraFoodImage,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
-                                )
-                              : Container(
-                                  height: 200,
-                                  width: 250,
-                                  child: Image.file(
-                                    _extraFoodImage,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                        ),
-                      )
-                    ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(height: 50),
                   isSending

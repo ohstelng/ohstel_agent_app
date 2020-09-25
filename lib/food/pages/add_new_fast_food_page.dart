@@ -292,7 +292,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+        margin: EdgeInsets.symmetric(vertical: 24, horizontal: 8),
         child: ListView(
           children: [
             Form(
@@ -453,43 +453,45 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                       ),
                     ],
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Store Image",
-                        style: Styles.titleTextStyle,
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          selectImage();
-                        },
-                        child: Container(
-                          decoration: Styles.boxDec,
-                          child: (fastFoodImages == null)
-                              ? Container(
-                                  height: 150,
-                                  width: 150,
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.black,
-                                  ),
-                                )
-                              : Container(
-                                  height: 200,
-                                  width: 250,
-                                  child: Image.file(
-                                    fastFoodImages,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Store Image",
+                          style: Styles.titleTextStyle,
                         ),
-                      ),
-                      SizedBox(height: 8)
-                    ],
+                        SizedBox(
+                          height: 8,
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            selectImage();
+                          },
+                          child: Container(
+                            decoration: Styles.boxDec,
+                            child: (fastFoodImages == null)
+                                ? Container(
+                                    height: 150,
+                                    width: 150,
+                                    child: Icon(
+                                      Icons.add_a_photo,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 200,
+                                    width: 250,
+                                    child: Image.file(
+                                      fastFoodImages,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        SizedBox(height: 8)
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 8,
@@ -605,37 +607,39 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                       onSaved: (value) => _desc = value.trim(),
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Item Image",style: Styles.titleTextStyle,),
-                      InkWell(
-                        onTap: () {
-                          selectItemImage();
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          decoration: Styles.boxDec,
-                          child: (_foodImage == null)
-                              ? Container(
-                                  height: 150,
-                                  width: 150,
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.black,
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("Item Image",style: Styles.titleTextStyle,),
+                        InkWell(
+                          onTap: () {
+                            selectItemImage();
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            decoration: Styles.boxDec,
+                            child: (_foodImage == null)
+                                ? Container(
+                                    height: 150,
+                                    width: 150,
+                                    child: Icon(
+                                      Icons.add_a_photo,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 200,
+                                    width: 250,
+                                    child: Image.file(
+                                      _foodImage,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
-                                )
-                              : Container(
-                                  height: 200,
-                                  width: 250,
-                                  child: Image.file(
-                                    _foodImage,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                        ),
-                      )
-                    ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
 
                   //
