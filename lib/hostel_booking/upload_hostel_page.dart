@@ -335,11 +335,11 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 16),
         color: Colors.white,
         child: ListView(
           children: <Widget>[
-            Text('Upload Hostel',style: Styles.subTitle2TextStyle,),
+            Text('Upload Hostel',style: Styles.subTitle1TextStyle,),
             form(),
           ],
         ),

@@ -19,7 +19,7 @@ TextStyle headingTextStyle = TextStyle(
   fontSize: 16,
 );
 TextStyle subTitle1TextStyle = TextStyle(
-  fontSize: 16,
+  fontSize: 22,
 );
 TextStyle subTitle2TextStyle = TextStyle(
   color: Colors.black,
