@@ -28,7 +28,7 @@ class HireWorkerModel {
     @required this.profileImageUrl,
     @required this.about,
     @required this.openTime,
-    @required this.laundryList,
+    this.laundryList,
   });
 
   HireWorkerModel.fromMap(Map<String, dynamic> mapData) {

@@ -196,7 +196,7 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
   Future<dynamic> postImage(File imageFile) async {
     try {
       StorageReference storageReference =
-          FirebaseStorage.instance.ref().child('hostelImage/${Uuid().v1()}');
+          FirebaseStorage.instance.ref().child('marketImage/${Uuid().v1()}');
 
       StorageUploadTask uploadTask = storageReference.putFile(imageFile);
 

@@ -7,6 +7,7 @@ class LaundryAddressDetailsModel {
   Map dropOffAddress;
   String pickUpNumber;
   String dropOffNumber;
+  String uniName;
 
   LaundryAddressDetailsModel({
     @required this.pickUpDate,
@@ -24,6 +25,7 @@ class LaundryAddressDetailsModel {
     this.dropOffAddress = mapData['dropOffAddress'];
     this.pickUpNumber = mapData['pickUpNumber'];
     this.dropOffNumber = mapData['dropOffNumber'];
+    this.uniName = mapData['uniName'];
   }
 
   Map toMap() {

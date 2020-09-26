@@ -9,7 +9,9 @@ class LaundryBookingBasketModel {
   String imageUrl;
   int units;
   int price;
+  String status;
   String laundryMode;
+  String id;
 
   LaundryBookingBasketModel({
     @required this.clothTypes,
@@ -33,6 +35,8 @@ class LaundryBookingBasketModel {
     this.laundryPersonEmail = mapData['laundryPersonEmail'];
     this.laundryPersonUniName = mapData['laundryPersonUniName'];
     this.laundryPersonPhoneNumber = mapData['laundryPersonPhoneNumber'];
+    this.status = mapData['status'];
+//    this.id = mapData['id'];
   }
 
   Map toMap() {
@@ -46,7 +50,15 @@ class LaundryBookingBasketModel {
     data['laundryPersonEmail'] = this.laundryPersonEmail;
     data['laundryPersonUniName'] = this.laundryPersonUniName;
     data['laundryPersonPhoneNumber'] = this.laundryPersonPhoneNumber;
+    data['doneWith'] = false;
+//    data['id'] = Uuid.;
 
     return data;
   }
 }
+
+/// Awaiting PickUp...
+///
+/// Picked Up, washing In Progress...
+/// Washing Done, delivery In Progress....
+/// Delivered..

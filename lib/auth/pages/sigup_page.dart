@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:ohostel_hostel_agent_app/auth/methods/auth_methods.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_textfield.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
 class SignUpPage extends StatefulWidget {
   final Function toggleView;
@@ -89,126 +93,109 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Colors.white,
+          bottom: PreferredSize(
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Create your Account",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800, fontSize: 24)),
+                    Text(
+                      "Let's get to know you better",
+                      style: TextStyle(
+                          fontSize: 10, fontWeight: FontWeight.normal),
+                    )
+                  ],
+                ),
+              ),
+              preferredSize: Size.fromHeight(30)),
+          elevation: 0,
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
+              onPressed: () => widget.toggleView())),
       body: SingleChildScrollView(
         child: loading == false
             ? Container(
+          height: MediaQuery.of(context).size.height,
+                color: Colors.white,
                 child: Form(
                   key: formKey,
                   child: Column(
                     children: <Widget>[
-                      Container(
-                          height: 100,
-                          child: Center(
-                            child: Text(
-                              'SignUp',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0),
-                            ),
-                          )),
-                      Container(
-                        child: TextFormField(
-                          validator: (value) {
-                            if (value.trim().isEmpty) {
-                              return 'First Name Can\'t Be Empty';
-                            } else if (value.trim().length < 3) {
-                              return 'First Name Must Be More Than 2 Characters';
-                            } else {
-                              return null;
-                            }
-                          },
-                          decoration: InputDecoration(
-                            labelText: 'First Name',
-                          ),
-                          onSaved: (value) => firstName = value.trim(),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-//                                decoration: BoxDecoration(
-//                                    border: Border(
-//                                        bottom: BorderSide(
-//                                            color: Colors.grey[200]))),
+                      Spacer(flex:1),
+                      CustomTextField(
+                        onSaved: (value) => firstName = value.trim(),
+                        labelText: "First Name",
+                        validator: (value) {
+                          if (value.trim().isEmpty) {
+                            return 'First Name Can\'t Be Empty';
+                          } else if (value.trim().length < 3) {
+                            return 'First Name Must Be More Than 2 Characters';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 15),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'Last Name Can\'t Be Empty';
-                              } else if (value.trim().length < 3) {
-                                return 'Last Name Must Be More Than 2 Characters';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Last Name',
-                            ),
-                            onSaved: (value) => lastName = value.trim(),
-                          ),
-                        ),
+                      CustomTextField(
+                        onSaved: (value) => lastName = value.trim(),
+                        labelText: "Last Name",
+                        validator: (value) {
+                          if (value.trim().isEmpty) {
+                            return 'Last Name Can\'t Be Empty';
+                          } else if (value.trim().length < 3) {
+                            return 'Last Name Must Be More Than 2 Characters';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 15),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'shopName Can\'t Be Empty';
-                              } else if (value.trim().length <= 3) {
-                                return 'shopName Must Be More Than 3 Characters';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'shopName',
-                            ),
-                            onSaved: (value) => shopName = value.trim(),
-                          ),
-                        ),
+                      CustomTextField(
+                        onSaved: (value) => shopName = value.trim(),
+                        labelText: "Shop Name",
+                        validator: (value) {
+                          if (value.trim().isEmpty) {
+                            return 'Shop Name Can\'t Be Empty';
+                          } else if (value.trim().length <= 3) {
+                            return 'Shop Name Must Be More Than 3 Characters';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 15),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'Field Can\'t Be Empty';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Phone Number',
-                            ),
-                            onSaved: (value) => phoneNumber = value.trim(),
-                          ),
-                        ),
+                      CustomTextField(
+                        textInputType: TextInputType.phone,
+                        onSaved: (value) => phoneNumber = value.trim(),
+                        labelText: "Phone Number",
+                        validator: (value) {
+                          if (value.trim().isEmpty) {
+                            return 'Field Can\'t Be Empty';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 15),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'Email Can\'t Be Empty';
-                              } else if (!value.trim().endsWith('.com')) {
-                                return 'Invalid Email';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                            ),
-                            onSaved: (value) => email = value.trim(),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                        ),
+                      CustomTextField(
+                        textInputType: TextInputType.emailAddress,
+                        onSaved: (value) => email = value.trim(),
+                        labelText: "Email",
+                        validator: (value) {
+                          if (value.trim().isEmpty) {
+                            return 'Email Can\'t Be Empty';
+                          } else if (!value.trim().endsWith('.com')) {
+                            return 'Invalid Email';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                       Container(
                         child: Padding(
@@ -238,85 +225,76 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 15),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'address Can\'t Be Empty';
-                              } else if (value.trim().length < 6) {
-                                return 'address Must Be More Than 6 Characters';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'input your address',
-                            ),
-//                                    obscureText: true,
-                            onSaved: (value) {
-                              address = value.trim();
-                            },
-                            keyboardType: TextInputType.visiblePassword,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 15),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'Password Can\'t Be Empty';
-                              } else if (value.trim().length < 6) {
-                                return 'Password Must Be More Than 6 Characters';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                            ),
-//                                    obscureText: true,
-                            onSaved: (value) {
-                              _password = value.trim();
-                            },
-                            keyboardType: TextInputType.visiblePassword,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 15),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'Password Can\'t Be Empty';
-                              } else if (value.trim().length < 6) {
-                                return 'Password Must Be More Than 6 Characters';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Password Again!',
-                            ),
-                            onSaved: (value) {
-                              _passwordAgain = value.trim();
-                            },
-                            keyboardType: TextInputType.visiblePassword,
-//                                    obscureText: notshowPassword,
-                          ),
-                        ),
-                      ),
-                      Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        height: 55,
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xffEBF1EF),
                         ),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value.trim().isEmpty) {
+                              return 'address Can\'t Be Empty';
+                            } else if (value.trim().length < 6) {
+                              return 'address Must Be More Than 6 Characters';
+                            } else {
+                              return null;
+                            }
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            labelText: 'Input your address',
+                          ),
+                          onSaved: (value) {
+                            address = value.trim();
+                          },
+                          keyboardType: TextInputType.visiblePassword,
+                        ),
+                      ),
+                      CustomTextField(
+                        validator: (value) {
+                          if (value.trim().isEmpty) {
+                            return 'Password Can\'t Be Empty';
+                          } else if (value.trim().length < 6) {
+                            return 'Password Must Be More Than 6 Characters';
+                          } else {
+                            return null;
+                          }
+                        },
+                        labelText: 'Password',
+                        obscureText: true,
+                        onSaved: (value) {
+                          _password = value.trim();
+                        },
+                        textInputType: TextInputType.visiblePassword,
+                      ),
+                      CustomTextField(
+                        validator: (value) {
+                          if (value.trim().isEmpty) {
+                            return 'Password Can\'t Be Empty';
+                          } else if (value.trim().length < 6) {
+                            return 'Password Must Be More Than 6 Characters';
+                          } else {
+                            return null;
+                          }
+                        },
+                        labelText: 'Password',
+                        obscureText: true,
+                        onSaved: (value) {
+                          _passwordAgain = value.trim();
+                        },
+                        textInputType: TextInputType.visiblePassword,
+                      ),
+                      Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        decoration: BoxDecoration(
+
+                            border: Border.all(color: Styles.themePrimary)),
+
                         child: ExpansionTile(
                           key: GlobalKey(),
                           title: Text('$uniName'),
@@ -385,8 +363,25 @@ class _SignUpPageState extends State<SignUpPage> {
                           ],
                         ),
                       ),
+                      Text("By clicking on 'Create Account', you agree to"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('our '),
+                          Text(
+                            'Terms and Conditions',
+                            style: Styles.underline,
+                          ),
+                          Text(' and '),
+                          Text(
+                            'Privacy policy',
+                            style: Styles.underline,
+                          )
+                        ],
+                      ),
                       signUpButton(),
                       logInButton(),
+                      Spacer(flex:1)
                     ],
                   ),
                 ),
@@ -408,43 +403,27 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget signUpButton() {
-    return Container(
-      margin: EdgeInsets.all(20),
-      height: 60,
-      width: MediaQuery.of(context).size.width * 0.80,
-      decoration: BoxDecoration(
-          color: Colors.green, borderRadius: BorderRadius.circular(15)),
-      child: RaisedButton(
-        onPressed: () {
-          validateAndSave();
-        },
-        child: Center(
-          child: Text(
-            'Create account',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
+    return LongButton(
+      onPressed: () => validateAndSave(),
+      label: "Create Account",
+      color: Styles.themePrimary,
+      labelColor: Colors.white,
     );
   }
 
   Widget logInButton() {
-    return Container(
-      margin: EdgeInsets.all(20),
-      height: 60,
-      width: MediaQuery.of(context).size.width * 0.80,
-      decoration: BoxDecoration(
-          color: Colors.green, borderRadius: BorderRadius.circular(15)),
-      child: RaisedButton(
-        onPressed: () {
-          widget.toggleView();
-        },
+    return InkWell(
+      onTap: () {
+        widget.toggleView();
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 10),
         child: Center(
           child: Text(
-            'login',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            textAlign: TextAlign.center,
+            "Already have an account ? Sign in",
+            style: TextStyle(
+                color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
           ),
         ),
       ),

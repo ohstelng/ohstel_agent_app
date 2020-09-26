@@ -1,4 +1,4 @@
-# ohostel_hostel_agent_app
+# ohstel_hostel_agent_app
 
 A new Flutter project.
 

@@ -1,63 +1,89 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ohostel_hostel_agent_app/market_place/market_methods.dart';
-import 'package:ohostel_hostel_agent_app/market_place/models/paid_market_orders_model.dart';
+import 'package:ohostel_hostel_agent_app/hire/hire_methods.dart';
+import 'package:ohostel_hostel_agent_app/hire/model/laundry_address_details_model.dart';
+import 'package:ohostel_hostel_agent_app/hire/model/laundry_basket_model.dart';
+import 'package:ohostel_hostel_agent_app/hire/model/paid_laundry_model.dart';
+import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
-class AllMarketOrderPage extends StatefulWidget {
+enum LaundryStatus { AwaitingWashUp, AwaitingDelivery, Delivered }
+
+class LaundryShopOwnerOrders extends StatefulWidget {
   @override
-  _AllMarketOrderPageState createState() => _AllMarketOrderPageState();
+  _LaundryShopOwnerOrdersState createState() => _LaundryShopOwnerOrdersState();
 }
 
-class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
+class _LaundryShopOwnerOrdersState extends State<LaundryShopOwnerOrders> {
   int _current = 0;
   bool loading = false;
+  String userName;
+
+  Future<void> refresh() async {
+    int count = 0;
+
+    Navigator.popUntil(context, (route) {
+      return count++ == 2;
+    });
+
+    setState(() {
+      loading = true;
+    });
+    await Future.delayed(Duration(milliseconds: 500));
+    setState(() {
+      loading = false;
+    });
+  }
 
   Future<void> updateOrderDetails(
-      {@required PaidOrderModel order,
+      {@required PaidLaundryBookingModel laundry,
       @required int index,
-      @required String type}) async {
-    List<Map> _updatedOrdersList = [];
+      @required LaundryStatus type}) async {
+    List<Map> _updatedLaundryList = [];
+    bool doneWith = false;
 
-    for (var i = 0; i < order.orders.length; i++) {
-      Map eachOrder = order.orders[i];
+    for (var i = 0; i < laundry.listOfLaundry.length; i++) {
+      Map eachLaundry = laundry.listOfLaundry[i];
       print('ooooo');
 
       if (i == index) {
-        if (type == 'shipping') {
-          eachOrder['deliveryStatus'] = 'Delivery In Progress';
-        } else if (type == 'delivered') {
-          eachOrder['deliveryStatus'] = 'Delivered To Buyer';
+        if (type == LaundryStatus.AwaitingWashUp) {
+          eachLaundry['status'] = 'Picked Up, washing In Progress...';
+        } else if (type == LaundryStatus.AwaitingDelivery) {
+          eachLaundry['status'] = 'Washing Done, delivery In Progress....';
+        } else if (type == LaundryStatus.Delivered) {
+          eachLaundry['status'] = 'Delivered';
         }
+
+        _updatedLaundryList.add(eachLaundry);
       }
 
-      _updatedOrdersList.add(eachOrder);
+      if (eachLaundry['status'] == 'Delivered') {
+        doneWith = true;
+      } else {
+        doneWith = false;
+      }
     }
 
-    PaidOrderModel updatedOrder = PaidOrderModel(
-      buyerFullName: order.buyerFullName,
-      buyerEmail: order.buyerEmail,
-      buyerPhoneNumber: order.buyerPhoneNumber,
-      buyerAddress: order.buyerAddress,
-      buyerID: order.buyerID,
-      amountPaid: order.amountPaid,
-      listOfShopsPurchasedFrom: order.listOfShopsPurchasedFrom,
-      orders: _updatedOrdersList,
-    );
+    print(laundry.id);
+    print(_updatedLaundryList);
 
-    print(order.id);
-    await MarketMethods()
-        .updateOrder(paidOrder: updatedOrder, id: order.id)
-        .whenComplete(() async {
+    await HireMethods()
+        .updateLaundryOrders(
+      id: laundry.id,
+      listOfLaundry: _updatedLaundryList,
+      doneWith: doneWith,
+    )
+        .whenComplete(() {
       refresh();
     });
   }
 
   void setShippingInfo(
-      {@required PaidOrderModel order,
+      {@required PaidLaundryBookingModel laundry,
       @required int index,
-      @required String type}) {
+      @required LaundryStatus type}) {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -72,7 +98,7 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
               child: Text('Yes'),
               onPressed: () {
                 updateOrderDetails(
-                  order: order,
+                  laundry: laundry,
                   index: index,
                   type: type,
                 );
@@ -91,7 +117,8 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
     );
   }
 
-  void optionPopUp({@required PaidOrderModel order, @required int index}) {
+  void optionPopUp(
+      {@required PaidLaundryBookingModel laundry, @required int index}) {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -104,21 +131,31 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
             children: [
               FlatButton(
                 color: Colors.green,
-                child: Text('Confirm Shipping in Progress'),
+                child: Text('Confirm Laundry Has been Picked Up'),
                 onPressed: () => setShippingInfo(
-                  order: order,
+                  laundry: laundry,
                   index: index,
-                  type: 'shipping',
+                  type: LaundryStatus.AwaitingWashUp,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 5),
+              FlatButton(
+                color: Colors.green,
+                child: Text('Confirm Laundry Has been Washed And packaged'),
+                onPressed: () => setShippingInfo(
+                  laundry: laundry,
+                  index: index,
+                  type: LaundryStatus.AwaitingDelivery,
+                ),
+              ),
+              SizedBox(height: 5),
               FlatButton(
                 color: Colors.green,
                 child: Text('Confirm Delivered'),
                 onPressed: () => setShippingInfo(
-                  order: order,
+                  laundry: laundry,
                   index: index,
-                  type: 'delivered',
+                  type: LaundryStatus.Delivered,
                 ),
               ),
             ],
@@ -136,20 +173,21 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
     );
   }
 
-  Future<void> refresh() async {
-    int count = 0;
-
-    Navigator.popUntil(context, (route) {
-      return count++ == 2;
-    });
-
+  Future<void> getData() async {
     setState(() {
       loading = true;
     });
-    await Future.delayed(Duration(milliseconds: 500));
+    Map data = await HiveMethods().getLaundryUserData();
+    userName = data['userName'];
     setState(() {
       loading = false;
     });
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
   }
 
   @override
@@ -161,20 +199,26 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
             : PaginateFirestore(
                 itemsPerPage: 10,
                 itemBuilderType: PaginateBuilderType.listView,
-                query: MarketMethods()
-                    .productOrdersRef
-                    .where('doneWith', isEqualTo: false)
+                query: HireMethods()
+                    .laundryOrdersRef
+                    .where('listOfLaundryShopsOrderedFrom',
+                        arrayContains: userName)
+//                    .where('uniName', isEqualTo: false)
                     .orderBy('timestamp', descending: true),
                 itemBuilder: (_, context, snap) {
-                  PaidOrderModel paidOrder = PaidOrderModel.fromMap(snap.data);
+                  PaidLaundryBookingModel laundry =
+                      PaidLaundryBookingModel.fromMap(snap.data);
+                  LaundryAddressDetailsModel addressDetails =
+                      LaundryAddressDetailsModel.fromMap(
+                          laundry.clothesOwnerAddressDetails);
 
                   return Container(
 //              margin: EdgeInsets.all(5.0),
                     child: Card(
                       elevation: 2.0,
                       child: ExpansionTile(
-                        title: Text('${paidOrder.id}'),
-                        subtitle: Text('${paidOrder.timestamp.toDate()}'),
+                        title: Text('${laundry.clothesOwnerName}'),
+                        subtitle: Text('${laundry.timestamp.toDate()}'),
                         children: [
                           Container(
                             width: double.infinity,
@@ -184,29 +228,42 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('Buyer Name: ${paidOrder.buyerFullName}'),
+                                Text('Owner Name: ${laundry.clothesOwnerName}'),
                                 Text(
-                                    'Buyer Number: ${paidOrder.buyerPhoneNumber}'),
-                                Text('Amount Paid: ${paidOrder.amountPaid}'),
-                                Text('Buyer Email: ${paidOrder.buyerEmail}'),
+                                    'Owner Email: ${laundry.clothesOwnerEmail}'),
                                 Text(
-                                    'Buyer Address: ${paidOrder.buyerAddress}'),
+                                    'Owner Number: ${laundry.clothesOwnerPhoneNumber}'),
                                 Text(
-                                    'Number Of Orders: ${paidOrder.orders.length}'),
+                                    'Pick Up Address: ${addressDetails.pickUpAddress['address']}, ${addressDetails.pickUpAddress['areaName']}. onCampus: ${addressDetails.pickUpAddress['onCampus']}'),
+                                Text(
+                                    'Pick Up Number: ${addressDetails.pickUpNumber}'),
+                                Text(
+                                    'Pick Up Date: ${addressDetails.pickUpDate}'),
+                                Text(
+                                    'Pick Up Time: ${addressDetails.pickUpTime}'),
+                                Text(
+                                    'Drop Off Address: ${addressDetails.dropOffAddress['address']}, ${addressDetails.dropOffAddress['areaName']}. onCampus: ${addressDetails.dropOffAddress['onCampus']}'),
+                                Text(
+                                    'Drop off Number: ${addressDetails.dropOffNumber}'),
                               ],
                             ),
                           ),
                           ListView.builder(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            itemCount: paidOrder.orders.length,
+                            itemCount: laundry.listOfLaundry.length,
                             itemBuilder: (context, index) {
-                              EachPaidOrderModel currentOrder =
-                                  EachPaidOrderModel.fromMap(
-                                      paidOrder.orders[index]);
+                              LaundryBookingBasketModel currentLaundry =
+                                  LaundryBookingBasketModel.fromMap(
+                                      laundry.listOfLaundry[index]);
+
+                              if (currentLaundry.laundryPersonName !=
+                                  userName) {
+                                return Container();
+                              }
                               return InkWell(
                                 onTap: () {
-                                  optionPopUp(order: paidOrder, index: index);
+//                                  optionPopUp(laundry: laundry, index: index);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -216,8 +273,8 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
                                   child: Row(
                                     children: [
                                       displayMultiPic(
-                                          imageList: currentOrder.imageUrls),
-                                      details(currentOrder: currentOrder),
+                                          imageList: [currentLaundry.imageUrl]),
+                                      details(laundryBooking: currentLaundry),
                                     ],
                                   ),
                                 ),
@@ -234,20 +291,22 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
     );
   }
 
-  Widget details({@required EachPaidOrderModel currentOrder}) {
+  Widget details({@required LaundryBookingBasketModel laundryBooking}) {
     return Container(
-      margin: EdgeInsets.all(10.0),
+//      height: 150,
+      margin: EdgeInsets.all(5.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('productName: ${currentOrder.productName}'),
-          Text('ShopName: ${currentOrder.productShopName}'),
-          Text('Shop Email: ${currentOrder.productShopOwnerEmail}'),
-          Text('Shop Number: ${currentOrder.productShopOwnerPhoneNumber}'),
-          Text('Price: ${currentOrder.productPrice}'),
-          Text('Category: ${currentOrder.productCategory}'),
-          Text('deliveryStatus: ${currentOrder.deliveryStatus}'),
+          Text('Shop Name: ${laundryBooking.laundryPersonName}'),
+          Text('Shop phone Number: ${laundryBooking.laundryPersonPhoneNumber}'),
+          Text('Shop Email: ${laundryBooking.laundryPersonEmail}'),
+          Text('Cloth Type: ${laundryBooking.clothTypes}'),
+          Text('Wash Mode: ${laundryBooking.laundryMode}'),
+          Text('Price: ${laundryBooking.price}'),
+          Text('uints: ${laundryBooking.units}'),
+          Text('status: ${laundryBooking.status}'),
         ],
       ),
     );
@@ -256,16 +315,18 @@ class _AllMarketOrderPageState extends State<AllMarketOrderPage> {
   Widget displayMultiPic({@required List imageList}) {
     List imgs = imageList.map(
       (images) {
-        return Container(
-          child: ExtendedImage.network(
-            images,
-            fit: BoxFit.fill,
-            handleLoadingProgress: true,
-            shape: BoxShape.rectangle,
-            cache: false,
-            enableMemoryCache: true,
-          ),
-        );
+        return images != null
+            ? Container(
+                child: ExtendedImage.network(
+                  images,
+                  fit: BoxFit.fill,
+                  handleLoadingProgress: true,
+                  shape: BoxShape.rectangle,
+                  cache: false,
+                  enableMemoryCache: true,
+                ),
+              )
+            : Center(child: Icon(Icons.image));
       },
     ).toList();
     return Container(

@@ -29,11 +29,28 @@ class MarketMethods {
     }
   }
 
-  Future updateOrder({@required PaidOrderModel paidOrder}) async {
+  Future updateOrder(
+      {@required PaidOrderModel paidOrder, @required String id}) async {
+    bool doneWith = false;
     try {
       print('saving');
-      await productOrdersRef.document(paidOrder.id).updateData({
+      print(id);
+      print('saving');
+
+      paidOrder.orders.forEach((element) {
+        Map data = element;
+        String status = data['deliveryStatus'];
+        if (status == 'Delivered To Buyer') {
+          doneWith = true;
+        } else {
+          doneWith = false;
+        }
+        print(doneWith);
+      });
+
+      await productOrdersRef.document(id).updateData({
         'orders': paidOrder.orders,
+        'doneWith': doneWith,
       });
       print('Updated!!');
       Fluttertoast.showToast(msg: 'Updated!!');
