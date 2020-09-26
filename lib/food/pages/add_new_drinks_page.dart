@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ohostel_hostel_agent_app/food/food_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/models/food_details_model.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
 import 'package:uuid/uuid.dart';
 
 class AddNewDrinksPage extends StatefulWidget {
@@ -119,136 +121,132 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add New Drink Item'),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back_ios),
-        ),
-      ),
-      body: ListView(
-        children: [
-          Form(
-            key: formKey,
-            child: Column(
-              children: [
-                Container(
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value.trim().isEmpty) {
-                        return 'Drink Name Can\'t Be Empty';
-                      } else if (value.trim().length < 3) {
-                        return 'Drink Name Must Be More Than 2 Characters';
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Drink Name (e.g Fried rice)',
+      body: Container(
+        margin: EdgeInsets.symmetric(vertical: 24,horizontal: 8),
+        child: ListView(
+          children: [
+            Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Add New Drink Item',style: subTitle1TextStyle,),
+                  Container(
+                    padding:EdgeInsets.symmetric(horizontal: 8),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: boxDec,
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value.trim().isEmpty) {
+                          return 'Drink Name Can\'t Be Empty';
+                        } else if (value.trim().length < 3) {
+                          return 'Drink Name Must Be More Than 2 Characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Drink Name (e.g Fried rice)',
+                      ),
+                      onSaved: (value) => _itemName = value.trim(),
                     ),
-                    onSaved: (value) => _itemName = value.trim(),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-                Container(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.done,
-                    validator: (value) {
-                      if (value.trim().isEmpty) {
-                        return 'Drink Price Can\'t Be Empty';
-                      } else if (value.trim().length < 3) {
-                        return 'Drink Price Must Be More Than 2 Characters';
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Drink Price',
+                  Container(
+                    padding:EdgeInsets.symmetric(horizontal: 8),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: boxDec,
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      validator: (value) {
+                        if (value.trim().isEmpty) {
+                          return 'Drink Price Can\'t Be Empty';
+                        } else if (value.trim().length < 3) {
+                          return 'Drink Price Must Be More Than 2 Characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Drink Price',
+                      ),
+                      onSaved: (value) => _itemPrice = int.parse(value.trim()),
                     ),
-                    onSaved: (value) => _itemPrice = int.parse(value.trim()),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-                Container(
-                  child: TextFormField(
-                    maxLines: null,
-                    validator: (value) {
-                      if (value.trim().isEmpty) {
-                        return 'desc Can\'t Be Empty';
-                      } else if (value.trim().length < 3) {
-                        return 'desc Must Be More Than 2 Characters';
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'short Description',
+                  Container(
+                    padding:EdgeInsets.symmetric(horizontal: 8),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    decoration: boxDec,
+                    child: TextFormField(
+                      maxLines: null,
+                      validator: (value) {
+                        if (value.trim().isEmpty) {
+                          return 'desc Can\'t Be Empty';
+                        } else if (value.trim().length < 3) {
+                          return 'desc Must Be More Than 2 Characters';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Short Description',
+                      ),
+                      onSaved: (value) => _desc = value.trim(),
                     ),
-                    onSaved: (value) => _desc = value.trim(),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(10.0),
-                      child: FlatButton(
-                        onPressed: () {
-                          selectItemImage();
-                        },
-                        color: Colors.green,
-                        child: Text(
-                          'Select Item Image',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(10.0),
+                          child: Text("Select Item Image",style: titleTextStyle),
                         ),
-                      ),
+                        InkWell(
+                          onTap: () {
+                            selectItemImage();
+                          },
+                          child: Container(
+                            decoration: boxDec,
+                            child: (_drinkImage == null)
+                                ? Container(
+                                    height: 150,
+                                    width: 150,
+                                    child: Icon(
+                                      Icons.add_a_photo,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 200,
+                                    width: 250,
+                                    child: Image.file(
+                                      _drinkImage,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                          ),
+                        )
+                      ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Colors.grey,
-                      ),
-                      child: (_drinkImage == null)
-                          ? Container(
-                              height: 150,
-                              width: 150,
-                              child: Icon(
-                                Icons.image,
-                                color: Colors.black,
-                              ),
-                            )
-                          : Container(
-                              height: 200,
-                              width: 250,
-                              child: Image.file(
-                                _drinkImage,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                    )
-                  ],
-                ),
-                SizedBox(height: 50),
-                isSending
-                    ? CircularProgressIndicator()
-                    : FlatButton(
-                        color: Colors.green,
-                        onPressed: () {
-                          saveData();
-                        },
-                        child: Text('Save'),
-                      ),
-              ],
-            ),
-          )
-        ],
+                  ),
+                  SizedBox(height: 50),
+                  isSending
+                      ? CircularProgressIndicator()
+                      : LongButton(
+                          onPressed: () {
+                            saveData();
+                          },
+                          label: "Save",
+                        ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -18,6 +18,7 @@ class _HostelHomePageState extends State<HostelHomePage> {
         length: 5,
         child: Scaffold(
           appBar: AppBar(
+            elevation: 0,
             leading: IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.black,),onPressed: ()=>Navigator.of(context).pop(),),
             backgroundColor: Colors.grey[200],
             title: Text('Hostel Management Console',style: TextStyle(color: Colors.black),),
