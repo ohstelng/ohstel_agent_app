@@ -11,7 +11,13 @@ import 'package:http/http.dart' as http;
 import 'package:ohostel_hostel_agent_app/hire/hire_methods.dart';
 import 'package:ohostel_hostel_agent_app/hire/model/hire_agent_model.dart';
 import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as style;
 import 'package:uuid/uuid.dart';
+
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/custom_smallButton.dart';
+import '../../../widgets/custom_textfield.dart';
+import '../../../widgets/styles.dart';
 
 class AddHireWorkerPage extends StatefulWidget {
   @override
@@ -136,9 +142,9 @@ class _AddHireWorkerPageState extends State<AddHireWorkerPage> {
   }
 
   Future<void> loadAssets() async {
-    setState(() {
-      imagesFile = null;
-    });
+    // setState(() {
+    //   imagesFile = null;
+    // });
 
     try {
       File files;
@@ -246,325 +252,291 @@ class _AddHireWorkerPageState extends State<AddHireWorkerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+    return Form(
+      key: formKey,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //Worker Name
+            CustomTextField(
+              labelText: 'Worker Name',
+              onSaved: (val) => workerName = val,
+              validator: (value) {
+                if (value.trim().isEmpty) {
+                  return 'workerName Can\'t Be Empty';
+                } else if (value.trim().length < 3) {
+                  return 'workerName Must Be More Than 2 Characters';
+                } else {
+                  return null;
+                }
+              },
+            ),
+
+            //Username field
+            CustomTextField(
+              labelText: 'Username',
+              onSaved: (val) => userName = val,
+              validator: (value) {
+                if (value.trim().isEmpty) {
+                  return 'userName Can\'t Be Empty';
+                } else if (value.trim().length < 3) {
+                  return 'userName Must Be More Than 2 Characters';
+                } else {
+                  return null;
+                }
+              },
+            ),
+
+            Row(
               children: [
-                _workerNameFormField(),
-                _userNameFormField(),
-                Row(
-                  children: [
-                    Expanded(child: _workPhoneNumberFormField()),
-                    Expanded(child: _workerEmailNumberFormField()),
-                  ],
+                Expanded(
+                  child: CustomTextField(
+                    labelText: 'Phone number',
+                    onSaved: (val) => workerPhoneNumber = val,
+                    validator: (value) {
+                      if (value.trim().isEmpty) {
+                        return 'workerPhoneNumber Can\'t Be Empty';
+                      } else if (value.trim().length < 3) {
+                        return 'workerPhoneNumber Must Be More Than 2 Characters';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
                 ),
-                _aboutFormField(),
-                _openTimeFormField(),
-                _priceRangeFormField(),
-                _dropDown(),
-                selectLocationWidget(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Add Image',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Container(
-                      child: imagesFile != null
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  imagesFile = null;
-                                  isSending = false;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.refresh,
-                                color: Colors.black,
-                              ),
-                            )
-                          : Container(),
-                    )
-                  ],
+                Expanded(
+                  child: CustomTextField(
+                    labelText: 'Email',
+                    onSaved: (val) => workerEmail = val,
+                    validator: (value) {
+                      if (value.trim().isEmpty) {
+                        return 'workerEmail Can\'t Be Empty';
+                      } else if (value.trim().length < 3) {
+                        return 'workerEmail Must Be More Than 2 Characters';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
                 ),
-                buildGridView(),
-                SizedBox(height: 30),
-                isSending
-                    ? Center(child: CircularProgressIndicator())
-                    : FlatButton(
-                        color: Colors.green,
-                        onPressed: () {
-                          saveData();
-                        },
-                        child: Text('Save'),
-                      ),
               ],
             ),
-          ),
+
+            //About Field
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color(0xffEBF1EF),
+              ),
+              child: TextFormField(
+                maxLines: 10,
+                minLines: 1,
+                maxLength: 250,
+                validator: (value) {
+                  if (value.trim().isEmpty) {
+                    return 'about Can\'t Be Empty';
+                  } else if (value.trim().length < 3) {
+                    return 'about Must Be More Than 2 Characters';
+                  } else {
+                    return null;
+                  }
+                },
+                onSaved: (val) => about = val,
+                style: style.body1TextStyle,
+                decoration: InputDecoration(
+                  hintText: 'Description',
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+
+            //Open Period Field
+            CustomTextField(
+              labelText: 'Open period',
+              onSaved: (val) => openTime = val,
+              validator: (value) {
+                if (value.trim().isEmpty) {
+                  return 'openTime Can\'t Be Empty';
+                } else if (value.trim().length < 3) {
+                  return 'openTime Must Be More Than 2 Characters';
+                } else {
+                  return null;
+                }
+              },
+            ),
+
+            //Price Range Field
+            CustomTextField(
+              labelText: 'Price Range',
+              onSaved: (val) => priceRange = val,
+              validator: (value) {
+                if (value.trim().isEmpty) {
+                  return 'priceRange Can\'t Be Empty';
+                } else if (value.trim().length < 3) {
+                  return 'priceRange Must Be More Than 2 Characters';
+                } else {
+                  return null;
+                }
+              },
+            ),
+
+            //Work Type Field
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color(0xffEBF1EF),
+              ),
+              height: 55,
+              alignment: Alignment.centerLeft,
+              child: DropdownButton(
+                isExpanded: true,
+                hint: Text("Select Work Type"),
+                value: workType,
+                onChanged: (value) {
+                  setState(() {
+                    workType = value;
+                  });
+                },
+                items: type.map((element) {
+                  return DropdownMenuItem(
+                    value: element,
+                    child: Text(
+                      element,
+                      style: style.body1TextStyle,
+                    ),
+                  );
+                }).toList(),
+                underline: Container(),
+                isDense: true,
+                elevation: 4,
+              ),
+            ),
+
+            //Select Location field
+            selectLocationWidget(),
+
+            //Adding Image
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0, bottom: 8, left: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text('Add Image', style: style.headingTextStyle),
+                  Spacer(),
+                  Container(
+                    child: imagesFile != null
+                        ? IconButton(
+                            onPressed: () {
+                              setState(() {
+                                imagesFile = null;
+                                isSending = false;
+                              });
+                            },
+                            icon: Icon(
+                              Icons.refresh,
+                              color: style.midnightBlue,
+                            ),
+                          )
+                        : Container(),
+                  )
+                ],
+              ),
+            ),
+            buildGridView(),
+
+            SizedBox(height: 8),
+            isSending
+                ? Center(child: CircularProgressIndicator(strokeWidth: 4))
+                : LongButton(
+                    onPressed: saveData,
+                    label: 'Save',
+                  ),
+          ],
         ),
       ),
     );
   }
 
   Widget buildGridView() {
-    if (imagesFile != null)
-      return Container(
+    /* return  Container(
         height: 150,
         width: 150,
-        child: GridView.count(
+        alignment: Alignment.center,
+        child:
+            /* GridView.count(
 //        scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           crossAxisCount: 1,
           children: List.generate(1, (index) {
             File asset = imagesFile;
-
-            return Container(
-              constraints: BoxConstraints(
-                maxHeight: 100,
-              ),
-              margin: EdgeInsets.all(5.0),
-              child: Image.file(
-                asset,
-              ),
-            );
-          }),
-        ),
+ */
+            Image.file(imagesFile),
       );
-    else
-      return Container(
-        margin: EdgeInsets.all(20.0),
-        height: 150,
-        width: 150,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
-          borderRadius: BorderRadius.circular(25),
-          color: Colors.grey,
-        ),
-        child: IconButton(
-          onPressed: () {
-            loadAssets();
-          },
-          icon: Icon(
-            Icons.add_photo_alternate,
-            color: Colors.white,
-            size: 50,
-          ),
-        ),
-      );
-  }
-
-  Widget _workerNameFormField() {
+    else */
     return Container(
-      child: TextFormField(
-        validator: (value) {
-          if (value.trim().isEmpty) {
-            return 'workerName Can\'t Be Empty';
-          } else if (value.trim().length < 3) {
-            return 'workerName Must Be More Than 2 Characters';
-          } else {
-            return null;
-          }
-        },
-//        keyboardType: keyBordType,
-        decoration: InputDecoration(
-          labelText: 'workerName',
-        ),
-        onSaved: (val) => workerName = val,
+      margin: EdgeInsets.all(8.0),
+      height: 150,
+      width: 150,
+      decoration: BoxDecoration(
+        border: Border.all(color: style.midnightBlue),
+        borderRadius: BorderRadius.circular(16),
+        color: style.midnightBlue.withOpacity(0.5),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    );
-  }
-
-  Widget _userNameFormField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) {
-          if (value.trim().isEmpty) {
-            return 'userName Can\'t Be Empty';
-          } else if (value.trim().length < 3) {
-            return 'userName Must Be More Than 2 Characters';
-          } else {
-            return null;
-          }
-        },
-//        keyboardType: keyBordType,
-        decoration: InputDecoration(
-          labelText: 'userName',
-        ),
-        onSaved: (val) => userName = val,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    );
-  }
-
-  Widget _workPhoneNumberFormField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) {
-          if (value.trim().isEmpty) {
-            return 'workerPhoneNumber Can\'t Be Empty';
-          } else if (value.trim().length < 3) {
-            return 'workerPhoneNumber Must Be More Than 2 Characters';
-          } else {
-            return null;
-          }
-        },
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: 'workPhoneNumber',
-        ),
-        onSaved: (val) => workerPhoneNumber = val,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    );
-  }
-
-  Widget _workerEmailNumberFormField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) {
-          if (value.trim().isEmpty) {
-            return 'workerEmail Can\'t Be Empty';
-          } else if (value.trim().length < 3) {
-            return 'workerEmail Must Be More Than 2 Characters';
-          } else {
-            return null;
-          }
-        },
-//        keyboardType: keyBordType,
-        decoration: InputDecoration(
-          labelText: 'workerEmail',
-        ),
-        onSaved: (val) => workerEmail = val,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    );
-  }
-
-  Widget _aboutFormField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) {
-          if (value.trim().isEmpty) {
-            return 'about Can\'t Be Empty';
-          } else if (value.trim().length < 3) {
-            return 'about Must Be More Than 2 Characters';
-          } else {
-            return null;
-          }
-        },
-//        keyboardType: keyBordType,
-        decoration: InputDecoration(
-          labelText: 'about/dec',
-        ),
-        onSaved: (val) => about = val,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    );
-  }
-
-  Widget _openTimeFormField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) {
-          if (value.trim().isEmpty) {
-            return 'openTime Can\'t Be Empty';
-          } else if (value.trim().length < 3) {
-            return 'openTime Must Be More Than 2 Characters';
-          } else {
-            return null;
-          }
-        },
-//        keyboardType: keyBordType,
-        decoration: InputDecoration(
-          labelText: 'openTime',
-        ),
-        onSaved: (val) => openTime = val,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    );
-  }
-
-  Widget _priceRangeFormField() {
-    return Container(
-      child: TextFormField(
-        validator: (value) {
-          if (value.trim().isEmpty) {
-            return 'priceRange Can\'t Be Empty';
-          } else if (value.trim().length < 3) {
-            return 'priceRange Must Be More Than 2 Characters';
-          } else {
-            return null;
-          }
-        },
-//        keyboardType: keyBordType,
-        decoration: InputDecoration(
-          labelText: 'priceRange',
-        ),
-        onSaved: (val) => priceRange = val,
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 15),
-    );
-  }
-
-  Widget _dropDown() {
-    return DropdownButton(
-      // select Category
-      hint: Text("Select Work Type"),
-      value: workType,
-      onChanged: (value) {
-        setState(() {
-//          subCategory = categoryMap['$value'];
-//          print(categoryMap['$value']);
-          workType = value;
-        });
-      },
-      items: type.map((element) {
-        return DropdownMenuItem(
-          value: element,
-          child: Text(
-            element,
-            style: TextStyle(color: Colors.black),
-          ),
-        );
-      }).toList(),
+      alignment: Alignment.center,
+      child: (imagesFile != null)
+          ? Image.file(imagesFile, fit: BoxFit.fill)
+          : IconButton(
+              iconSize: 64,
+              onPressed: loadAssets,
+              icon: Icon(
+                Icons.add_photo_alternate,
+                color: style.background,
+                // size: 64,
+              ),
+            ),
     );
   }
 
   Widget selectLocationWidget() {
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          FlatButton(
-            color: Colors.green,
+          ShortButton(
+            color: midnightBlue,
             onPressed: () {
               _showEditUniDailog();
             },
-            child: Text('Select Location'),
+            label: 'Select Location',
           ),
           Container(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(8.0),
+            height: 45,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
+              // border: Border.all(color: style.midnightBlue, width: 0.7),
+              borderRadius: BorderRadius.circular(3),
             ),
             child: StreamBuilder(
               stream: _uniNameController.stream,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Text('No Loacation Selected');
+                  return Text(
+                    'No Loacation Selected',
+                    style:
+                        style.body1TextStyle.copyWith(color: Colors.blueGrey),
+                  );
                 } else {
                   uniName = snapshot.data;
 //                  productOriginLocation = snapshot.data;
-                  return Text('${snapshot.data}');
+                  return Text(
+                    '${snapshot.data}',
+                    style: style.body1TextStyle,
+                  );
                 }
               },
             ),

@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider<LoginUserModel>.value(
       value: AuthService().userStream,
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: "O'Hstel Agent",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
