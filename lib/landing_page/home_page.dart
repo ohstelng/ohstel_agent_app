@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   text: " Welcome, ",
                   style: TextStyle(
                     fontSize: 24,
-                    color: Colors.black,
+                    color: Styles.textBlack, //Colors.black,
                   ),
                   children: [
                     TextSpan(
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                             'Hostel Agent ',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Styles.textBlack, //Colors.black,
                             ),
                           )
                         ],
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                             'Food Agent',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Styles.textBlack, //Colors.black,
                             ),
                           )
                         ],
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                             'Market Agent ',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Styles.textBlack, //Colors.black,
                             ),
                           )
                         ],
@@ -196,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                             'Hire Agent',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: Styles.textBlack, //Colors.black,
                             ),
                           )
                         ],

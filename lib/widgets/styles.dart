@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color themePrimary = Color(0xFFF27507);
-const Color textBlack = Color(0xFF101218);
+const Color textBlack = Color(0xFF3A3A3A);
 const Color midnightBlue = Color(0xFF1F2430);
 const Color themeGrey = Color(0xFFF4F5F6);
 const Color themeGrey2 = Color(0xFFEBF1EF);
@@ -39,6 +39,7 @@ TextStyle subTitle2TextStyle = TextStyle(
 );
 TextStyle body1TextStyle = TextStyle(
   fontSize: 16,
+  color: textBlack,
 );
 TextStyle body2TextStyle = TextStyle(
   fontSize: 14,
