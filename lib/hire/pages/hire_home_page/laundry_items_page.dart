@@ -11,7 +11,7 @@ class LaundryItemPage extends StatefulWidget {
 }
 
 class _LaundryItemPageState extends State<LaundryItemPage> {
-  bool loading;
+  bool loading = true;
   Map userData;
 
   Future<void> getUserData() async {
@@ -22,8 +22,20 @@ class _LaundryItemPageState extends State<LaundryItemPage> {
     });
   }
 
+  Future<void> refresh() async {
+    setState(() {
+      loading = true;
+    });
+    await Future.delayed(Duration(milliseconds: 500));
+    setState(() {
+      loading = false;
+    });
+  }
+
   Future<void> deleteLaundryItem({@required Map data}) async {
     await HireMethods().deleteLaundryClothesTypesAndPrice(data: data);
+    Navigator.pop(context);
+    refresh();
   }
 
   void ask({@required Map data}) {

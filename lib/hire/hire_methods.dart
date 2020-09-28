@@ -70,8 +70,8 @@ class HireMethods {
       await hireRef.document(userUid).updateData({
         'laundryList': FieldValue.arrayRemove([data]),
       });
-      print('UpDated!!');
-      Fluttertoast.showToast(msg: 'UpDated!!');
+      print('Deleted!!');
+      Fluttertoast.showToast(msg: 'Deleted!!');
     } catch (e) {
       print(e);
       Fluttertoast.showToast(msg: '$e');

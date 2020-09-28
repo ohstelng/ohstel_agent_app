@@ -201,8 +201,6 @@ class _AddNewClothesPageState extends State<AddNewClothesPage> {
                   validator: (value) {
                     if (value.trim().isEmpty) {
                       return 'Dry Clean Price Can\'t Be Empty';
-                    } else if (value.trim().length < 3) {
-                      return 'Dry Clean Price Must Be More Than 2 Characters';
                     } else {
                       return null;
                     }
@@ -225,8 +223,6 @@ class _AddNewClothesPageState extends State<AddNewClothesPage> {
                   validator: (value) {
                     if (value.trim().isEmpty) {
                       return 'Wash And Iron Price Can\'t Be Empty';
-                    } else if (value.trim().length < 3) {
-                      return 'Wash And Iron Price Must Be More Than 2 Characters';
                     } else {
                       return null;
                     }
@@ -249,8 +245,6 @@ class _AddNewClothesPageState extends State<AddNewClothesPage> {
                   validator: (value) {
                     if (value.trim().isEmpty) {
                       return 'Wash Only Price Can\'t Be Empty';
-                    } else if (value.trim().length < 3) {
-                      return 'Wash Only Price Must Be More Than 2 Characters';
                     } else {
                       return null;
                     }
@@ -273,8 +267,6 @@ class _AddNewClothesPageState extends State<AddNewClothesPage> {
                   validator: (value) {
                     if (value.trim().isEmpty) {
                       return 'Iron Only Price Can\'t Be Empty';
-                    } else if (value.trim().length < 3) {
-                      return 'Iron Only Price Must Be More Than 2 Characters';
                     } else {
                       return null;
                     }

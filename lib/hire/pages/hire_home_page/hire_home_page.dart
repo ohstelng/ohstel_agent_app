@@ -20,7 +20,7 @@ class _HireHomePageState extends State<HireHomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 4,
+        length: 5,
         child: Scaffold(
           backgroundColor: style.themeGrey,
           appBar: AppBar(
@@ -87,6 +87,16 @@ class _HireHomePageState extends State<HireHomePage> {
                       color: style.themePrimary,
                       size: 20,
                     )),
+                Tab(
+                    child: Text(
+                      "Laundry Item Page", //(Shop Owner)
+                      textAlign: TextAlign.center,
+                    ),
+                    icon: Icon(
+                      Icons.list,
+                      color: style.themePrimary,
+                      size: 20,
+                    )),
               ],
             ),
           ),
@@ -98,6 +108,7 @@ class _HireHomePageState extends State<HireHomePage> {
                 LaundryShopOwnerOrders(),
                 AllLaundryOrder(),
                 AddNewClothesPage(),
+                LaundryItemPage(),
               ],
             ),
           ),
