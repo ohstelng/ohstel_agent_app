@@ -39,6 +39,8 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
   List<String> subCategory;
   bool isSending = false;
   bool loading = true;
+  bool showSize = false;
+  List sizeList = [];
 
   Future getUniList() async {
     String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
@@ -163,7 +165,7 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
   }
 
   Future getUrls() async {
-    List<dynamic> imageUrl = [];
+    List<String> imageUrl = [];
 
 //    print(images);
     for (var imageFile in imagesFiles) {
@@ -187,6 +189,7 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
         productShopName: productShopName,
         productShopOwnerEmail: productShopOwnerEmail,
         productShopOwnerPhoneNumber: productShopOwnerPhoneNumber,
+        sizeInfo: sizeList ?? null,
       );
       print(productModel.toMap());
       await MarketMethods().saveProductToServer(productModel: productModel);
@@ -244,6 +247,43 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
     setState(() {
       loading = false;
     });
+  }
+
+  Future<void> showSizePoPup() async {
+    String _size;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      // false = user must tap button, true = tap outside dialog
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Enter Size'),
+          content: TextField(
+            decoration: InputDecoration(
+              hintText: 'Enter Size',
+            ),
+            onChanged: (val) {
+              _size = val;
+            },
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Save'),
+              onPressed: () {
+                sizeList.add(_size);
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -438,6 +478,10 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
             value: productCategory,
             onChanged: (value) {
               setState(() {
+                subCategory = null;
+                productCategory = null;
+                productSubCategory = null;
+
                 subCategory = categoryMap['$value'];
                 print(categoryMap['$value']);
 
@@ -485,6 +529,26 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Show Size'),
+              Switch(
+                value: showSize,
+                onChanged: (value) {
+                  setState(() {
+                    showSize = value;
+                    print(showSize);
+                  });
+                },
+                activeTrackColor: Colors.lightGreenAccent,
+                activeColor: Colors.green,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          showSize ? showSizeWidget() : Container(),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 'Add Image',
@@ -521,6 +585,44 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
                   },
                   child: Text('Save'),
                 ),
+        ],
+      ),
+    );
+  }
+
+  Widget showSizeWidget() {
+    return Container(
+      child: Column(
+        children: [
+          FlatButton(
+            onPressed: () async {
+              await showSizePoPup();
+              setState(() {});
+            },
+            color: Colors.green,
+            child: Text('ADD SIZE!'),
+          ),
+          Container(
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: sizeList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    color: Colors.transparent,
+                  ),
+                  padding: EdgeInsets.all(10.0),
+                  margin: EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Text('${sizeList[index]}'),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

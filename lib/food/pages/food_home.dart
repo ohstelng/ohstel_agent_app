@@ -4,6 +4,7 @@ import 'package:ohostel_hostel_agent_app/food/pages/add_new_extra_items_page.dar
 import 'package:ohostel_hostel_agent_app/food/pages/add_new_fast_food_page.dart';
 import 'package:ohostel_hostel_agent_app/food/pages/add_new_food_item_page.dart';
 import 'package:ohostel_hostel_agent_app/food/pages/food_list.dart';
+import 'package:ohostel_hostel_agent_app/food/pages/food_orders_page.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
 class FoodHomePage extends StatefulWidget {
@@ -15,7 +16,7 @@ class _FoodHomePageState extends State<FoodHomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -54,8 +55,13 @@ class _FoodHomePageState extends State<FoodHomePage> {
                   child: Text("Drinks", style: Styles.captionTextStyle),
                   icon: Icon(Icons.local_drink, color: Styles.themePrimary)),
               Tab(
-                  child: Text("Menu", style: Styles.captionTextStyle),
-                  icon: Icon(Icons.restaurant_menu, color: Styles.themePrimary))
+                child: Text("Menu", style: Styles.captionTextStyle),
+                icon: Icon(Icons.restaurant_menu, color: Styles.themePrimary),
+              ),
+              Tab(
+                child: Text("Order", style: Styles.captionTextStyle),
+                icon: Icon(Icons.add_shopping_cart, color: Styles.themePrimary),
+              ),
             ],
           ),
         ),
@@ -65,7 +71,8 @@ class _FoodHomePageState extends State<FoodHomePage> {
             AddNewFoodItemPage(),
             AddExtraItemPage(),
             AddNewDrinksPage(),
-            FastFoodListPage()
+            FastFoodListPage(),
+            FoodOrderPage(),
           ],
         ),
       ),

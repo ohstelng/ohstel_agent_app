@@ -124,6 +124,7 @@ class _ShopOwnerOrdersState extends State<ShopOwnerOrders> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('productName: ${currentOrder.productName}'),
+          Text('product Size: ${currentOrder.size ?? 'None'}'),
           Text('ShopName: ${currentOrder.productShopName}'),
           Text('Shop Email: ${currentOrder.productShopOwnerEmail}'),
           Text('Shop Number: ${currentOrder.productShopOwnerPhoneNumber}'),
