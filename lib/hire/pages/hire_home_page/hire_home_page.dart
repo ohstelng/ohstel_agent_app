@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/hire/pages/hire_home_page/add_hire_worker_page.dart';
 import 'package:ohostel_hostel_agent_app/hire/pages/hire_home_page/add_laundry_worker.dart';
 import 'package:ohostel_hostel_agent_app/hire/pages/hire_home_page/all_laundry_orders.dart';
+import 'package:ohostel_hostel_agent_app/hire/pages/hire_home_page/laundry_items_page.dart';
 import 'package:ohostel_hostel_agent_app/hire/pages/hire_home_page/shop_owner_orders.dart';
-import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 
 class HireHomePage extends StatefulWidget {
   @override
@@ -87,9 +87,6 @@ class _HireHomePageState extends State<HireHomePage> {
               child: FlatButton(
                 color: Colors.green,
                 onPressed: () async {
-//                  Map data = await HiveMethods().getUserData();
-//                  print(data);
-//                },
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => LaundryShopOwnerOrders(),
@@ -97,7 +94,27 @@ class _HireHomePageState extends State<HireHomePage> {
                   );
                 },
                 child: Text(
-                  'All Shop Owner Orders',
+                  'All Laundry Shop Owner Orders',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: FlatButton(
+                color: Colors.green,
+                onPressed: () async {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => LaundryItemPage(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Laundry Items',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:ohostel_hostel_agent_app/hire/hire_methods.dart';
 import 'package:ohostel_hostel_agent_app/hire/model/hire_agent_model.dart';
+import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:uuid/uuid.dart';
 
 class AddHireWorkerPage extends StatefulWidget {
@@ -20,6 +21,7 @@ class AddHireWorkerPage extends StatefulWidget {
 class _AddHireWorkerPageState extends State<AddHireWorkerPage> {
   StreamController _uniNameController = StreamController.broadcast();
   final formKey = GlobalKey<FormState>();
+  Map userData;
   String workerName;
   String userName;
   String workerPhoneNumber;
@@ -35,6 +37,14 @@ class _AddHireWorkerPageState extends State<AddHireWorkerPage> {
   File imagesFile;
   bool isSending = false;
   bool loading = true;
+
+  Future<void> getUserData() async {
+    userData = await HiveMethods().getUserData();
+    print(userData);
+    setState(() {
+      loading = false;
+    });
+  }
 
   Future getUniList() async {
     String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
@@ -181,6 +191,7 @@ class _AddHireWorkerPageState extends State<AddHireWorkerPage> {
         profileImageUrl: profileImageUrl,
         about: about,
         openTime: openTime,
+        workerUid: userData['uid'],
       );
 
       print(hireWorker.toMap());
@@ -225,6 +236,12 @@ class _AddHireWorkerPageState extends State<AddHireWorkerPage> {
       });
 //      Fluttertoast.showToast(msg: 'Upload Done!!');
     }
+  }
+
+  @override
+  void initState() {
+    getUserData();
+    super.initState();
   }
 
   @override

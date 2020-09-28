@@ -14,6 +14,7 @@ class HireWorkerModel {
   String openTime;
   Timestamp dateJoined;
   String profileImageUrl;
+  String workerUid;
   List searchKeys;
   List laundryList;
 
@@ -28,6 +29,7 @@ class HireWorkerModel {
     @required this.profileImageUrl,
     @required this.about,
     @required this.openTime,
+    @required this.workerUid,
     this.laundryList,
   });
 
@@ -45,6 +47,7 @@ class HireWorkerModel {
     this.laundryList = mapData['laundryList'];
     this.about = mapData['about'];
     this.openTime = mapData['openTime'];
+    this.workerUid = mapData['workerUid'];
   }
 
   Map toMap() {
@@ -69,6 +72,7 @@ class HireWorkerModel {
     data['laundryList'] = laundryList;
     data['openTime'] = this.openTime;
     data['about'] = this.about;
+    data['workerUid'] = this.workerUid;
     data['id'] = Uuid().v1().toString();
 
     return data;

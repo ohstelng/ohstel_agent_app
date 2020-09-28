@@ -61,6 +61,23 @@ class HireMethods {
     }
   }
 
+  Future<void> deleteLaundryClothesTypesAndPrice({@required Map data}) async {
+    Map userData = await HiveMethods().getUserData();
+    String userUid = userData['uid'];
+    print(userUid);
+
+    try {
+      await hireRef.document(userUid).updateData({
+        'laundryList': FieldValue.arrayRemove([data]),
+      });
+      print('UpDated!!');
+      Fluttertoast.showToast(msg: 'UpDated!!');
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: '$e');
+    }
+  }
+
   Future<void> updateLaundryOrders({
     @required String id,
     @required List listOfLaundry,
