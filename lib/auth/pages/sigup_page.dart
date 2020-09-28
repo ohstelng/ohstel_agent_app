@@ -125,13 +125,13 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SingleChildScrollView(
         child: loading == false
             ? Container(
-          height: MediaQuery.of(context).size.height,
+          // height: MediaQuery.of(context).size.height,
                 color: Colors.white,
                 child: Form(
                   key: formKey,
                   child: Column(
                     children: <Widget>[
-                      Spacer(flex:1),
+                      // Spacer(flex:1),
                       CustomTextField(
                         onSaved: (value) => firstName = value.trim(),
                         labelText: "First Name",
@@ -381,7 +381,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       signUpButton(),
                       logInButton(),
-                      Spacer(flex:1)
+                      // Spacer(flex:1)
                     ],
                   ),
                 ),

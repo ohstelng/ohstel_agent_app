@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 const Color themePrimary = Color(0xFFF27507);
+const Color textBlack = Color(0xFF3A3A3A);
+const Color midnightBlue = Color(0xFF1F2430);
+const Color themeGrey = Color(0xFFF4F5F6);
+const Color themeGrey2 = Color(0xFFEBF1EF);
+const Color background = Color(0xFFEFEFEF);
+
 // const Color themeBlack = Color(0xFF3A3A3A);
 // const Color themeGreen = Color(0xFF17E114);
 // const Color themeRed = Color(0xFFE13214);
 BoxDecoration boxDec = BoxDecoration(
-  color: Color(0xfff4f5f6),
+  color: themeGrey, //Color(0xfff4f5f6),
   borderRadius: BorderRadius.circular(10),
 );
 BoxDecoration cardDec = BoxDecoration(
@@ -33,6 +39,7 @@ TextStyle subTitle2TextStyle = TextStyle(
 );
 TextStyle body1TextStyle = TextStyle(
   fontSize: 16,
+  color: textBlack,
 );
 TextStyle body2TextStyle = TextStyle(
   fontSize: 14,
