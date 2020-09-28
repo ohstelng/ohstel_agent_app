@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ohostel_hostel_agent_app/food/models/extras_food_details.dart';
 import 'package:ohostel_hostel_agent_app/food/models/fast_food_details_model.dart';
+import 'package:ohostel_hostel_agent_app/food/models/paid_food_model.dart';
 
 import 'models/food_details_model.dart';
 
@@ -138,6 +139,37 @@ class FoodMethods {
     } catch (e) {
       print(e);
       Fluttertoast.showToast(msg: '$e');
+    }
+  }
+
+  Future updateFoodOrder(
+      {@required PaidFood paidOrder, @required String id}) async {
+    bool doneWith = false;
+    try {
+      print('saving');
+      print(id);
+      print('saving');
+
+      paidOrder.orders.forEach((element) {
+        Map data = element;
+        String status = data['status'];
+        if (status == 'Delivered To Buyer') {
+          doneWith = true;
+        } else {
+          doneWith = false;
+        }
+        print(doneWith);
+      });
+
+      await orderedFoodCollectionRef.document(id).updateData({
+        'orders': paidOrder.orders,
+        'doneWith': doneWith,
+      });
+      print('Updated!!');
+      Fluttertoast.showToast(msg: 'Updated!!');
+    } catch (err) {
+      print(err);
+      Fluttertoast.showToast(msg: '$err');
     }
   }
 }
