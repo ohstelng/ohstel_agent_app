@@ -172,4 +172,8 @@ class FoodMethods {
       Fluttertoast.showToast(msg: '$err');
     }
   }
+
+  Future deleteFastFood({@required String documentId}) async {
+    await foodCollectionRef.document(documentId).delete();
+  }
 }

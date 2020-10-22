@@ -92,49 +92,54 @@ class _LaundryItemPageState extends State<LaundryItemPage> {
 
                   return Card(
                     child: Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.all(10.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(hireWorker.workerName),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: hireWorker.laundryList.length,
-                            itemBuilder: (context, index) {
-                              LaundryBookingModel currentLaundry =
-                                  LaundryBookingModel.fromMap(
-                                hireWorker.laundryList[index],
-                              );
-                              return Container(
-                                margin: EdgeInsets.all(10.0),
-                                padding: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                        'Cloth Type: ${currentLaundry.clothTypes}'),
-                                    Text(
-                                        'Wash Only = ${currentLaundry.laundryModeAndPrice['Wash Only']}'),
-                                    Text(
-                                        'Dry Clean = ${currentLaundry.laundryModeAndPrice['Dry Clean']}'),
-                                    Text(
-                                        'Wash And Iron = ${currentLaundry.laundryModeAndPrice['Wash And Iron']}'),
-                                    Text(
-                                        'Iron Only = ${currentLaundry.laundryModeAndPrice['Iron Only']}'),
-                                    FlatButton(
-                                      onPressed: () {
-                                        ask(data: currentLaundry.toMap());
-                                      },
-                                      child: Text('Delete'),
-                                      color: Colors.red,
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+                          (hireWorker.laundryList != null)
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: hireWorker.laundryList.length,
+                                  itemBuilder: (context, index) {
+                                    LaundryBookingModel currentLaundry =
+                                        LaundryBookingModel.fromMap(
+                                      hireWorker.laundryList[index],
+                                    );
+                                    return Container(
+                                      margin: EdgeInsets.all(10.0),
+                                      padding: EdgeInsets.all(10.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.black),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              'Cloth Type: ${currentLaundry.clothTypes}'),
+                                          Text(
+                                              'Wash Only = ${currentLaundry.laundryModeAndPrice['Wash Only']}'),
+                                          Text(
+                                              'Dry Clean = ${currentLaundry.laundryModeAndPrice['Dry Clean']}'),
+                                          Text(
+                                              'Wash And Iron = ${currentLaundry.laundryModeAndPrice['Wash And Iron']}'),
+                                          Text(
+                                              'Iron Only = ${currentLaundry.laundryModeAndPrice['Iron Only']}'),
+                                          FlatButton(
+                                            onPressed: () {
+                                              ask(data: currentLaundry.toMap());
+                                            },
+                                            child: Text('Delete'),
+                                            color: Colors.red,
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Text('None Found!'),
                         ],
                       ),
                     ),

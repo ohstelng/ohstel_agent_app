@@ -47,10 +47,10 @@ class SelectFoodPage extends StatelessWidget {
           itemBuilderType: PaginateBuilderType.listView,
           query: FoodMethods()
               .foodCollectionRef
+              .where('uniName', isEqualTo: uniName)
               .orderBy('fastFood', descending: true),
           itemBuilder: (_, context, snap) {
             FastFoodModel fastFood = FastFoodModel.fromMap(snap.data);
-//                  return Text('jmjjj');
 
             return Container(
               margin: EdgeInsets.all(5.0),
@@ -115,7 +115,9 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
   }
 
   Future<void> updateOrderDetails(
-      {@required PaidFood order, @required int index}) async {
+      {@required PaidFood order,
+      @required int index,
+      @required int type}) async {
     List<Map> _updatedOrdersList = [];
 
     for (var i = 0; i < order.orders.length; i++) {
@@ -123,7 +125,11 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
       print('ooooo');
 
       if (i == index) {
-        eachOrder['status'] = 'Delivered To Buyer';
+        if (type == 1) {
+          eachOrder['status'] = 'Delivery In Progress';
+        } else if (type == 2) {
+          eachOrder['status'] = 'Delivered To Buyer';
+        }
       }
 
       _updatedOrdersList.add(eachOrder);
@@ -149,11 +155,11 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
     });
   }
 
-  void setShippingInfo({@required PaidFood order, @required int index}) {
+  void setShippingInfo(
+      {@required PaidFood order, @required int index, @required int type}) {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
-      // false = user must tap button, true = tap outside dialog
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text('Warning'),
@@ -166,6 +172,7 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
                 updateOrderDetails(
                   order: order,
                   index: index,
+                  type: type,
                 );
               },
             ),
@@ -195,11 +202,16 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
             children: [
               FlatButton(
                 color: Colors.green,
+                child: Text('Comfrim Delivery In Progress'),
+                onPressed: () =>
+                    setShippingInfo(order: order, index: index, type: 1),
+              ),
+              SizedBox(height: 20),
+              FlatButton(
+                color: Colors.green,
                 child: Text('Confirm Delivered'),
-                onPressed: () => setShippingInfo(
-                  order: order,
-                  index: index,
-                ),
+                onPressed: () =>
+                    setShippingInfo(order: order, index: index, type: 2),
               ),
             ],
           ),
@@ -283,18 +295,24 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
                             itemBuilder: (context, index) {
                               EachOrder currentOrder =
                                   EachOrder.fromMap(paidOrder.orders[index]);
-                              return InkWell(
-                                onTap: () {
-                                  optionPopUp(order: paidOrder, index: index);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
+                              if (currentOrder.fastFoodName ==
+                                      widget.fastFoodName ||
+                                  currentOrder.fastFoodName == 'drinks') {
+                                return InkWell(
+                                  onTap: () {
+                                    optionPopUp(order: paidOrder, index: index);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                    ),
+                                    margin: EdgeInsets.all(10.0),
+                                    child: details(currentOrder: currentOrder),
                                   ),
-                                  margin: EdgeInsets.all(10.0),
-                                  child: details(currentOrder: currentOrder),
-                                ),
-                              );
+                                );
+                              } else {
+                                return Container();
+                              }
                             },
                           ),
                         ],

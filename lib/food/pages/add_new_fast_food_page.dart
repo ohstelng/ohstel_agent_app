@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
-import 'package:ohostel_hostel_agent_app/widgets/custom_smallButton.dart';
-import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +12,9 @@ import 'package:ohostel_hostel_agent_app/food/models/extras_food_details.dart';
 import 'package:ohostel_hostel_agent_app/food/models/fast_food_details_model.dart';
 import 'package:ohostel_hostel_agent_app/food/models/food_details_model.dart';
 import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_smallButton.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 import 'package:uuid/uuid.dart';
 
 class AddNewFastFood extends StatefulWidget {
@@ -24,6 +25,7 @@ class AddNewFastFood extends StatefulWidget {
 class _AddNewFastFoodState extends State<AddNewFastFood> {
   StreamController _uniNameController = StreamController.broadcast();
   final formKey = GlobalKey<FormState>();
+  bool loading = false;
   String fastFoodName;
   String address;
   String openTime;
@@ -74,12 +76,12 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                           Container(
                               margin: EdgeInsets.only(left: 10.0, right: 10.0),
                               child: ListTile(
-                                onTap: () {
-//                                  print(currentUniDetails);
+                                onTap: () async {
                                   _uniNameController
                                       .add(currentUniDetails['abbr']);
                                   Navigator.pop(context);
-//                                  updateUni(uniDetails: currentUniDetails);
+                                  uniName = currentUniDetails['abbr'];
+                                  refreshPage();
                                 },
                                 title: Row(
                                   children: <Widget>[
@@ -268,12 +270,26 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   }
 
   Future<Map> getAreaNamesFromApi() async {
-    String uniName = await HiveMethods().getUniName();
-    String url = 'https://quiz-demo-de79d.appspot.com/food_api/$uniName';
+    debugPrint('pppppppppppppppppppppppppppppppppppppppppppppppppppppp');
+    String _uniName = uniName ?? await HiveMethods().getUniName();
+    debugPrint('$_uniName');
+    String url =
+        'https://quiz-demo-de79d.appspot.com/food_api/${_uniName.toLowerCase()}';
     var response = await http.get(url);
     Map data = json.decode(response.body);
 
+    debugPrint('Kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
     return data;
+  }
+
+  Future<void> refreshPage() async {
+    setState(() {
+      loading = true;
+    });
+    await Future.delayed(Duration(milliseconds: 50));
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -293,369 +309,379 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
     return Scaffold(
       body: Container(
         margin: EdgeInsets.symmetric(vertical: 24, horizontal: 8),
-        child: ListView(
-          children: [
-            Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: loading
+            ? Center(child: CircularProgressIndicator())
+            : ListView(
                 children: [
-                  Text('Add New Fast Food', style: Styles.subTitle1TextStyle),
-                  Container(
-                    decoration: Styles.boxDec,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'Fast Food Name Can\'t Be Empty';
-                        } else if (value.trim().length < 3) {
-                          return 'Fast Food Name Must Be More Than 2 Characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Fast Food Name',
-                      ),
-                      onSaved: (value) => fastFoodName = value.trim(),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  Container(
-                    decoration: Styles.boxDec,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'Address Can\'t Be Empty';
-                        } else if (value.trim().length < 3) {
-                          return 'Address Must Be More Than 2 Characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Address',
-                      ),
-                      onSaved: (value) => address = value.trim(),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  Container(
-                    decoration: Styles.boxDec,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'openTime Can\'t Be Empty';
-                        } else if (value.trim().length < 3) {
-                          return 'openTime Must Be More Than 2 Characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Open Time (e.g, 8:00am - 10:00pm )',
-                      ),
-                      onSaved: (value) => openTime = value.trim(),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ShortButton(
-                          onPressed: () {
-                            _showEditUniDailog();
-                          },
-                          label: 'Select Institution',
-                        ),
-                        Container(
-                          height: 45,
-                          padding: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Styles.themePrimary),
-                          ),
-                          child: Center(
-                            child: StreamBuilder(
-                              stream: _uniNameController.stream,
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return Text('No Institution Selected');
-                                } else {
-                                  uniName = snapshot.data;
-                                  return Text('${snapshot.data}');
-                                }
-                              },
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  ExpansionTile(
-                    key: GlobalKey(),
-                    title: Text('$areaName'),
-                    leading: Icon(Icons.location_on),
-                    children: <Widget>[
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * .30,
-                        child: FutureBuilder(
-                          future: getAreaNamesFromApi(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              List areaNameList = snapshot.data['areaNames'];
-                              return ListView.builder(
-                                physics: BouncingScrollPhysics(),
-                                itemCount: areaNameList.length,
-                                itemBuilder: (context, index) {
-                                  String currentAreaName = areaNameList[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      if (mounted) {
-                                        setState(() {
-                                          areaName = currentAreaName;
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.all(5.0),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.add_location,
-                                            color: Colors.grey,
-                                          ),
-                                          Text(
-                                            '$currentAreaName',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.w400),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Center(
+                  Form(
+                    key: formKey,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "Store Image",
-                          style: Styles.titleTextStyle,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            selectImage();
-                          },
-                          child: Container(
-                            decoration: Styles.boxDec,
-                            child: (fastFoodImages == null)
-                                ? Container(
-                                    height: 150,
-                                    width: 150,
-                                    child: Icon(
-                                      Icons.add_a_photo,
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                : Container(
-                                    height: 200,
-                                    width: 250,
-                                    child: Image.file(
-                                      fastFoodImages,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                        SizedBox(height: 8)
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    'Add Item',
-                    style: Styles.body1TextStyle,
-                  ),
-                  Divider(thickness: 2, color: Styles.themePrimary),
-                  Container(
-                    decoration: Styles.boxDec,
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'item Name Can\'t Be Empty';
-                        } else if (value.trim().length < 3) {
-                          return 'item Name Must Be More Than 2 Characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Item Name (e.g Fried rice)',
-                      ),
-                      onSaved: (value) => _itemName = value.trim(),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        decoration: Styles.boxDec,
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        child: DropdownButton(
-                          underline: SizedBox(),
-                          hint: Text('None Selected'),
-                          value: _value,
-                          items: [
-                            DropdownMenuItem(
-                              child: Text("Cooked Food"),
-                              value: 1,
-                            ),
-                            DropdownMenuItem(
-                              child: Text("Snacks"),
-                              value: 2,
-                            ),
-                          ],
-                          onChanged: (value) {
-                            String val;
-                            if (value == 1) {
-                              val = 'cookedFood';
-                            } else {
-                              val = 'snacks';
-                            }
-                            setState(() {
-                              _value = value;
-                              _itemCategory = val;
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          margin: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Add New Fast Food',
+                            style: Styles.subTitle1TextStyle),
+                        Container(
                           decoration: Styles.boxDec,
                           child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.done,
                             validator: (value) {
                               if (value.trim().isEmpty) {
-                                return 'Item Price Can\'t Be Empty';
+                                return 'Fast Food Name Can\'t Be Empty';
                               } else if (value.trim().length < 3) {
-                                return 'Item Price Must Be More Than 2 Characters';
+                                return 'Fast Food Name Must Be More Than 2 Characters';
                               } else {
                                 return null;
                               }
                             },
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Item Price',
+                              hintText: 'Fast Food Name',
                             ),
-                            onSaved: (value) =>
-                                _itemPrice = int.parse(value.trim()),
+                            onSaved: (value) => fastFoodName = value.trim(),
                           ),
-
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.symmetric(vertical: 8),
                         ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    decoration: Styles.boxDec,
-                    child: TextFormField(
-                      maxLines: null,
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'desc Can\'t Be Empty';
-                        } else if (value.trim().length < 3) {
-                          return 'desc Must Be More Than 2 Characters';
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Short Description',
-                      ),
-                      onSaved: (value) => _desc = value.trim(),
-                    ),
-                  ),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("Item Image",style: Styles.titleTextStyle,),
-                        InkWell(
-                          onTap: () {
-                            selectItemImage();
-                          },
-                          child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            decoration: Styles.boxDec,
-                            child: (_foodImage == null)
-                                ? Container(
-                                    height: 150,
-                                    width: 150,
-                                    child: Icon(
-                                      Icons.add_a_photo,
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                : Container(
-                                    height: 200,
-                                    width: 250,
-                                    child: Image.file(
-                                      _foodImage,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                        Container(
+                          decoration: Styles.boxDec,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return 'Address Can\'t Be Empty';
+                              } else if (value.trim().length < 3) {
+                                return 'Address Must Be More Than 2 Characters';
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Address',
+                            ),
+                            onSaved: (value) => address = value.trim(),
                           ),
-                        )
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                        ),
+                        Container(
+                          decoration: Styles.boxDec,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return 'openTime Can\'t Be Empty';
+                              } else if (value.trim().length < 3) {
+                                return 'openTime Must Be More Than 2 Characters';
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Open Time (e.g, 8:00am - 10:00pm )',
+                            ),
+                            onSaved: (value) => openTime = value.trim(),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                        ),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ShortButton(
+                                onPressed: () {
+                                  _showEditUniDailog();
+                                },
+                                label: 'Select Institution',
+                              ),
+                              Container(
+                                height: 45,
+                                padding: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(color: Styles.themePrimary),
+                                ),
+                                child: Center(
+                                  child: StreamBuilder(
+                                    stream: _uniNameController.stream,
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Text('No Institution Selected');
+                                      } else {
+                                        uniName = snapshot.data;
+                                        return Text('${snapshot.data}');
+                                      }
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        ExpansionTile(
+                          key: GlobalKey(),
+                          title: Text('$areaName'),
+                          leading: Icon(Icons.location_on),
+                          children: <Widget>[
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * .30,
+                              child: FutureBuilder(
+                                future: getAreaNamesFromApi(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else {
+                                    List areaNameList =
+                                        snapshot.data['areaNames'];
+                                    return ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: areaNameList.length,
+                                      itemBuilder: (context, index) {
+                                        String currentAreaName =
+                                            areaNameList[index];
+                                        return InkWell(
+                                          onTap: () {
+                                            if (mounted) {
+                                              setState(() {
+                                                areaName = currentAreaName;
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.all(5.0),
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.add_location,
+                                                  color: Colors.grey,
+                                                ),
+                                                Text(
+                                                  '$currentAreaName',
+                                                  style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Store Image",
+                                style: Styles.titleTextStyle,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  selectImage();
+                                },
+                                child: Container(
+                                  decoration: Styles.boxDec,
+                                  child: (fastFoodImages == null)
+                                      ? Container(
+                                          height: 150,
+                                          width: 150,
+                                          child: Icon(
+                                            Icons.add_a_photo,
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 200,
+                                          width: 250,
+                                          child: Image.file(
+                                            fastFoodImages,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                              SizedBox(height: 8)
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'Add Item',
+                          style: Styles.body1TextStyle,
+                        ),
+                        Divider(thickness: 2, color: Styles.themePrimary),
+                        Container(
+                          decoration: Styles.boxDec,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return 'item Name Can\'t Be Empty';
+                              } else if (value.trim().length < 3) {
+                                return 'item Name Must Be More Than 2 Characters';
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Item Name (e.g Fried rice)',
+                            ),
+                            onSaved: (value) => _itemName = value.trim(),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: Styles.boxDec,
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              child: DropdownButton(
+                                underline: SizedBox(),
+                                hint: Text('None Selected'),
+                                value: _value,
+                                items: [
+                                  DropdownMenuItem(
+                                    child: Text("Cooked Food"),
+                                    value: 1,
+                                  ),
+                                  DropdownMenuItem(
+                                    child: Text("Snacks"),
+                                    value: 2,
+                                  ),
+                                ],
+                                onChanged: (value) {
+                                  String val;
+                                  if (value == 1) {
+                                    val = 'cookedFood';
+                                  } else {
+                                    val = 'snacks';
+                                  }
+                                  setState(() {
+                                    _value = value;
+                                    _itemCategory = val;
+                                  });
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 8),
+                                decoration: Styles.boxDec,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  textInputAction: TextInputAction.done,
+                                  validator: (value) {
+                                    if (value.trim().isEmpty) {
+                                      return 'Item Price Can\'t Be Empty';
+                                    } else if (value.trim().length < 3) {
+                                      return 'Item Price Must Be More Than 2 Characters';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Item Price',
+                                  ),
+                                  onSaved: (value) =>
+                                      _itemPrice = int.parse(value.trim()),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          decoration: Styles.boxDec,
+                          child: TextFormField(
+                            maxLines: null,
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return 'desc Can\'t Be Empty';
+                              } else if (value.trim().length < 3) {
+                                return 'desc Must Be More Than 2 Characters';
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Short Description',
+                            ),
+                            onSaved: (value) => _desc = value.trim(),
+                          ),
+                        ),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Item Image",
+                                style: Styles.titleTextStyle,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  selectItemImage();
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 8),
+                                  decoration: Styles.boxDec,
+                                  child: (_foodImage == null)
+                                      ? Container(
+                                          height: 150,
+                                          width: 150,
+                                          child: Icon(
+                                            Icons.add_a_photo,
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 200,
+                                          width: 250,
+                                          child: Image.file(
+                                            _foodImage,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        //
+                        isSending
+                            ? CircularProgressIndicator()
+                            : LongButton(
+                                onPressed: () {
+                                  saveData();
+                                },
+                                label: 'Save',
+                              ),
                       ],
                     ),
                   ),
-
-                  //
-                  isSending
-                      ? CircularProgressIndicator()
-                      : LongButton(
-                          onPressed: () {
-                            saveData();
-                          },
-                          label: 'Save',
-                        ),
                 ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

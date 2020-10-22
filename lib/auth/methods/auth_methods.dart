@@ -32,7 +32,9 @@ class AuthService {
       {@required String email, @required String password}) async {
     try {
       AuthResult result = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
       FirebaseUser user = result.user;
 
       await getUserDetails(uid: user.uid);
