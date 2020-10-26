@@ -52,12 +52,16 @@ class HostelBookingMethods {
     List<HostelModel> hostelList = List<HostelModel>();
 
     QuerySnapshot querySnapshot = await hostelRef
-        .orderBy('hostelName', descending: true)
         .where('hostelName', isGreaterThanOrEqualTo: keyWord)
+        .orderBy('hostelName', descending: true)
         .limit(6)
         .getDocuments();
 
     for (var i = 0; i < querySnapshot.documents.length; i++) {
+      print('key : $keyWord');
+      debugPrint(
+          'hostel Name: ${querySnapshot.documents[i].data['hostelName']}');
+
       hostelList.add(HostelModel.fromMap(querySnapshot.documents[i].data));
     }
 

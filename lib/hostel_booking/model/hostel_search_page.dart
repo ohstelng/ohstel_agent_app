@@ -8,7 +8,6 @@ import 'package:ohostel_hostel_agent_app/hostel_booking/methods.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/model/hostel_model.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
-
 class HostelSearchPage extends StatefulWidget {
   @override
   _HostelSearchPageState createState() => _HostelSearchPageState();
@@ -32,16 +31,16 @@ class _HostelSearchPageState extends State<HostelSearchPage> {
     uniName = name;
   }
 
-  void startSearch({@required String value}) {
+  void startSearch() {
+    print('query $query');
     setState(() {
       searchStarted = true;
       isStillLoadingData = true;
     });
     try {
-      print(value);
       HostelBookingMethods()
           .fetchHostelByKeyWord(
-        keyWord: value,
+        keyWord: query,
         uniName: uniName,
       )
           .then((List<HostelModel> list) {
@@ -156,13 +155,13 @@ class _HostelSearchPageState extends State<HostelSearchPage> {
       margin: EdgeInsets.all(20.0),
       child: TextField(
         onChanged: (val) {
-          query = val;
+          query = val.trim();
         },
         decoration: InputDecoration(
           border: InputBorder.none,
           suffixIcon: IconButton(
             onPressed: () {
-              startSearch(value: query);
+              startSearch();
             },
             icon: Icon(Icons.search),
           ),
@@ -255,7 +254,7 @@ class _HostelSearchPageState extends State<HostelSearchPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * 0.70,
+            width: MediaQuery.of(context).size.width * 0.50,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

@@ -71,6 +71,7 @@ class _EditHostelPageState extends State<EditHostelPage> {
                       .deleteHostelDetails(id: widget.hostelModel.id)
                       .whenComplete(() {
                     Navigator.pop(context);
+                    Navigator.pop(context);
                   });
                 },
                 child: Text('Yes'),
@@ -183,16 +184,15 @@ class _EditHostelPageState extends State<EditHostelPage> {
               onPressed: () {
                 save();
               },
-              labelColor:Colors.white
-              ,
+              labelColor: Colors.white,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 20),
             LongButton(
               onPressed: () {
                 delete();
               },
               label: 'Delete',
-              color: Colors.white,
+              color: Colors.red[700],
               border: true,
               borderColor: Styles.themePrimary,
             ),
