@@ -113,7 +113,6 @@ class _LogInPageState extends State<LogInPage> {
                   passwordInputFieldBox(),
                   logInButton(),
                   forgotPassword(),
-                  signUpButton(),
                   Spacer(flex: 2,)
                 ],
               ),
@@ -178,17 +177,6 @@ class _LogInPageState extends State<LogInPage> {
         label: "Sign In",
         onPressed: () => validateAndSave(),
         color: Styles.themePrimary,
-      );
-  }
-
-  Widget signUpButton() {
-    return LongButton(
-        border: true,
-        borderColor: Styles.themePrimary,
-        labelColor: Styles.themePrimary,
-        label: "Register",
-        onPressed: () => widget.toggleView(),
-        color: Colors.white,
       );
   }
 

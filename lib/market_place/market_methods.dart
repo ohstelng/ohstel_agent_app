@@ -13,16 +13,49 @@ class MarketMethods {
   CollectionReference productOrdersRef =
       Firestore.instance.collection('marketOrders');
 
+  final CollectionReference shopCollection =
+      Firestore.instance.collection('shopOwnersData');
+
   CollectionReference productCategoriesRef = Firestore.instance
       .collection('market')
       .document('categories')
       .collection('productsList');
 
   Future saveProductToServer({@required ProductModel productModel}) async {
+    var dateParse = DateTime.parse(DateTime.now().toString());
+    Firestore db = Firestore.instance;
+    var batch = db.batch();
+
     try {
       print('saving');
-      await productRef.document(productModel.id).setData(productModel.toMap());
+
+      await shopCollection
+          .where('shopName', isEqualTo: productModel.productShopName)
+          .getDocuments()
+          .then((doc) {
+        print(doc.documents);
+
+        /// get first document. note they can only be one shop with a particular name
+        /// so this will always return a list of one document snapshot. So ill just take the
+        /// first one
+        DocumentSnapshot document = doc.documents[0];
+
+        /// Now will can perform our batch write
+        batch.setData(
+          shopCollection.document(document.documentID),
+          {"numberOfProducts": FieldValue.increment(1)},
+          merge: true,
+        );
+      });
+
+      batch.setData(
+        productRef.document(productModel.id),
+        productModel.toMap(),
+      );
+
+      await batch.commit();
       print('saved');
+      Fluttertoast.showToast(msg: 'Saved To Database');
     } catch (err) {
       print(err);
       Fluttertoast.showToast(msg: '$err');

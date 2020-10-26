@@ -218,7 +218,9 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
   Future<void> saveData() async {
     if (formKey.currentState.validate() &&
         productOriginLocation != null &&
-        imagesFiles.isNotEmpty) {
+        imagesFiles.isNotEmpty &&
+        productCategory != null &&
+        productSubCategory != null) {
       formKey.currentState.save();
       print('pass');
       setState(() {
@@ -230,8 +232,13 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
       print('two');
       setState(() {
         isSending = false;
+        formKey.currentState.reset();
+        imagesFiles = List<File>();
+        productOriginLocation = null;
       });
       Fluttertoast.showToast(msg: 'Upload Done!!');
+    } else {
+      Fluttertoast.showToast(msg: 'Fill All Details');
     }
   }
 
@@ -575,7 +582,7 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
             ],
           ),
           buildGridView(),
-          SizedBox(height: 30),
+          SizedBox(height: 10),
           isSending
               ? Center(child: CircularProgressIndicator())
               : FlatButton(
@@ -630,20 +637,23 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
 
   Widget buildGridView() {
     if (imagesFiles != null && imagesFiles.isNotEmpty)
-      return GridView.count(
-//        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        crossAxisCount: imagesFiles.length,
-        children: List.generate(imagesFiles.length, (index) {
-          File asset = imagesFiles[index];
+      return Container(
+        height: 200,
+        child: GridView.count(
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          crossAxisCount: imagesFiles.length,
+          children: List.generate(imagesFiles.length, (index) {
+            File asset = imagesFiles[index];
 
-          return Container(
-            margin: EdgeInsets.all(5.0),
-            child: Image.file(
-              asset,
-            ),
-          );
-        }),
+            return Container(
+              margin: EdgeInsets.all(5.0),
+              child: Image.file(
+                asset,
+              ),
+            );
+          }),
+        ),
       );
     else
       return Container(

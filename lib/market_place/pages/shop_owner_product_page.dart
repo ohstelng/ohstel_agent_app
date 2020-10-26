@@ -143,8 +143,9 @@ class _ShopOwnerProductPageState extends State<ShopOwnerProductPage> {
                           price: price,
                         )
                             .then((value) {
-                          refresh();
                           Navigator.pop(context);
+                          Navigator.pop(context);
+                          refresh();
                         });
                       },
                     );
