@@ -6,8 +6,13 @@ import 'package:ohostel_hostel_agent_app/food/models/food_details_model.dart';
 
 class SelectedFastFoodPage extends StatefulWidget {
   final FastFoodModel foodModel;
+  final Function refresh;
 
-  SelectedFastFoodPage({Key key, @required this.foodModel});
+  SelectedFastFoodPage({
+    Key key,
+    @required this.foodModel,
+    @required this.refresh,
+  });
 
   @override
   _SelectedFastFoodPageState createState() => _SelectedFastFoodPageState();
@@ -21,7 +26,6 @@ class _SelectedFastFoodPageState extends State<SelectedFastFoodPage> {
 
     print(widget.foodModel.itemDetails.length);
     for (var i = 0; i < widget.foodModel.itemDetails.length; i++) {
-//      print(widget.foodModel.itemDetails[i]);
       Map updateData = widget.foodModel.itemDetails[i];
 
       if (i == index) {
@@ -36,10 +40,14 @@ class _SelectedFastFoodPageState extends State<SelectedFastFoodPage> {
 
     await FoodMethods()
         .updateItemDetails(
-          itemDetails: _itemDetails,
-          fastFoodName: widget.foodModel.fastFoodName,
-        )
-        .whenComplete(() => Navigator.pop(context));
+      itemDetails: _itemDetails,
+      fastFoodName: widget.foodModel.fastFoodName,
+    )
+        .whenComplete(() {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      widget.refresh();
+    });
   }
 
   void deletePopUp({@required int index}) {
@@ -85,6 +93,7 @@ class _SelectedFastFoodPageState extends State<SelectedFastFoodPage> {
               itemLists: widget.foodModel.itemDetails,
               index: index,
               fastFoodName: widget.foodModel.fastFoodName,
+              refresh: widget.refresh,
             ),
           ),
         );
@@ -221,11 +230,13 @@ class EditFoodItemPage extends StatefulWidget {
   final List itemLists;
   final String fastFoodName;
   final int index;
+  final Function refresh;
 
   EditFoodItemPage({
     @required this.itemLists,
     @required this.fastFoodName,
     @required this.index,
+    @required this.refresh,
   });
 
   @override
@@ -274,10 +285,15 @@ class _EditFoodItemPageState extends State<EditFoodItemPage> {
               onPressed: () async {
                 await FoodMethods()
                     .updateItemDetails(
-                      itemDetails: getUpdatedItemDetails(),
-                      fastFoodName: widget.fastFoodName,
-                    )
-                    .whenComplete(() => Navigator.pop(context));
+                  itemDetails: getUpdatedItemDetails(),
+                  fastFoodName: widget.fastFoodName,
+                )
+                    .whenComplete(() {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  widget.refresh();
+                });
               },
               child: Text('Yes'),
               color: Colors.green,

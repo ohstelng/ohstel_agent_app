@@ -1,13 +1,14 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
-import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
-import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ohostel_hostel_agent_app/food/food_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/models/extras_food_details.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
 import 'package:uuid/uuid.dart';
 
 class AddExtraItemPage extends StatefulWidget {
@@ -70,9 +71,7 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
   }
 
   Future<void> saveData() async {
-    if (formKey.currentState.validate() &&
-        _extraFoodImage != null &&
-        _extraItemCategory != null) {
+    if (formKey.currentState.validate() && _extraItemCategory != null) {
       formKey.currentState.save();
 
       if (!mounted) return;
@@ -81,22 +80,22 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
         isSending = true;
       });
 
-      _extraFoodImageUrl = await getUrls(file: _extraFoodImage);
-
-      if (_extraFoodImageUrl != null) {
-        ExtraItemDetails item = ExtraItemDetails(
-          extraItemName: _extraItemName,
-          extraCategory: _extraItemCategory,
-          price: _extraItemPrice,
-          imageUrl: _extraFoodImageUrl,
-          shortDescription: _desc,
-          extraItemFastFoodName: fastFoodName,
-        );
-
-//        print(item.toMap());
-        await FoodMethods().saveExtraFoodItemToServer(extraFoodItems: item);
-//        Fluttertoast.showToast(msg: 'Done');
+      if (_extraFoodImage != null) {
+        _extraFoodImageUrl = await getUrls(file: _extraFoodImage);
       }
+
+      ExtraItemDetails item = ExtraItemDetails(
+        extraItemName: _extraItemName,
+        extraCategory: _extraItemCategory,
+        price: _extraItemPrice,
+        imageUrl: _extraFoodImageUrl,
+        shortDescription: _desc,
+        extraItemFastFoodName: fastFoodName,
+      );
+
+      print(item.toMap());
+      await FoodMethods().saveExtraFoodItemToServer(extraFoodItems: item);
+      Fluttertoast.showToast(msg: 'Done');
 
       if (!mounted) return;
       setState(() {
@@ -106,8 +105,6 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
         _extraFoodImageUrl = null;
         _extraFoodImage = null;
       });
-
-      formKey.currentState.reset();
     } else {
       Fluttertoast.showToast(msg: 'Pls Fill All Inputs');
       if (!mounted) return;
@@ -233,7 +230,7 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
                             onSaved: (value) =>
                                 _extraItemPrice = int.parse(value.trim()),
                           ),
-                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -300,7 +297,7 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
                   ),
                   SizedBox(height: 50),
                   isSending
-                      ? CircularProgressIndicator()
+                      ? Center(child: CircularProgressIndicator())
                       : LongButton(
                           onPressed: () {
                             saveData();

@@ -298,7 +298,7 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
                   ),
                   SizedBox(height: 50),
                   isSending
-                      ? CircularProgressIndicator()
+                      ? Center(child: CircularProgressIndicator())
                       : LongButton(
                           onPressed: () {
                             saveData();

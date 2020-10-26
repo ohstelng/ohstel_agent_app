@@ -56,7 +56,7 @@ class _FastFoodListPageState extends State<FastFoodListPage> {
               ),
               color: Colors.grey,
               onPressed: () {
-                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                Navigator.of(dialogContext).pop();
               },
             ),
           ],
@@ -82,13 +82,11 @@ class _FastFoodListPageState extends State<FastFoodListPage> {
 
                   return InkWell(
                     onTap: () {
-//                print("${currentFastFood.toMap()}");
-//                print("${currentFastFood.itemDetails}");
-
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => SelectedFastFoodPage(
                             foodModel: currentFastFood,
+                            refresh: refresh,
                           ),
                         ),
                       );

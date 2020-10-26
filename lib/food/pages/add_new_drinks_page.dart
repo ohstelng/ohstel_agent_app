@@ -19,7 +19,6 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
   final formKey = GlobalKey<FormState>();
   String fastFoodName;
   String _itemName;
-  int _value;
   int _itemPrice;
   String _desc;
   File _drinkImage;
@@ -33,10 +32,6 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
     });
 
     try {
-//      _foodImage = await FilePicker.getFile(
-//        type: FileType.custom,
-//        allowedExtensions: ['jpg', 'png', 'jpg'],
-//      );
       FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'png', 'jpg'],
@@ -94,18 +89,16 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
           itemFastFoodName: 'drinks',
         );
 
-//        print(item.toMap());
+        print(item.toMap());
         await FoodMethods().saveDrinkToServer(itemDetails: item);
-//        Fluttertoast.showToast(msg: 'Done');
+        Fluttertoast.showToast(msg: 'Done');
       }
 
       if (!mounted) return;
       setState(() {
         isSending = false;
-//        formKey.currentState.reset();
-////        _itemCategory = null;
-//        _drinkImageUrl = null;
-//        _drinkImage = null;
+        _drinkImageUrl = null;
+        _drinkImage = null;
       });
 
       formKey.currentState.reset();
@@ -122,7 +115,7 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 24,horizontal: 8),
+        margin: EdgeInsets.symmetric(vertical: 24, horizontal: 8),
         child: ListView(
           children: [
             Form(
@@ -130,9 +123,12 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Add New Drink Item',style: subTitle1TextStyle,),
+                  Text(
+                    'Add New Drink Item',
+                    style: subTitle1TextStyle,
+                  ),
                   Container(
-                    padding:EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 8),
                     margin: EdgeInsets.symmetric(vertical: 8),
                     decoration: boxDec,
                     child: TextFormField(
@@ -153,7 +149,7 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
                     ),
                   ),
                   Container(
-                    padding:EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 8),
                     margin: EdgeInsets.symmetric(vertical: 8),
                     decoration: boxDec,
                     child: TextFormField(
@@ -176,7 +172,7 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
                     ),
                   ),
                   Container(
-                    padding:EdgeInsets.symmetric(horizontal: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 8),
                     margin: EdgeInsets.symmetric(vertical: 8),
                     decoration: boxDec,
                     child: TextFormField(
@@ -203,7 +199,8 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.all(10.0),
-                          child: Text("Select Item Image",style: titleTextStyle),
+                          child:
+                              Text("Select Item Image", style: titleTextStyle),
                         ),
                         InkWell(
                           onTap: () {

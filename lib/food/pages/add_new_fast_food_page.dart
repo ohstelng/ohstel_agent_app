@@ -81,6 +81,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                                       .add(currentUniDetails['abbr']);
                                   Navigator.pop(context);
                                   uniName = currentUniDetails['abbr'];
+                                  areaName = 'Select Area Name';
                                   refreshPage();
                                 },
                                 title: Row(
@@ -214,7 +215,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
             fastFoodImages != null &&
             _foodImage != null &&
             areaName != 'Select Area Name' ||
-        null) {
+        areaName != null) {
       formKey.currentState.save();
       print('pass');
 
@@ -270,15 +271,12 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   }
 
   Future<Map> getAreaNamesFromApi() async {
-    debugPrint('pppppppppppppppppppppppppppppppppppppppppppppppppppppp');
     String _uniName = uniName ?? await HiveMethods().getUniName();
     debugPrint('$_uniName');
     String url =
         'https://quiz-demo-de79d.appspot.com/food_api/${_uniName.toLowerCase()}';
     var response = await http.get(url);
     Map data = json.decode(response.body);
-
-    debugPrint('Kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
     return data;
   }
 
@@ -286,7 +284,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
     setState(() {
       loading = true;
     });
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(Duration(milliseconds: 1));
     setState(() {
       loading = false;
     });
@@ -670,7 +668,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
 
                         //
                         isSending
-                            ? CircularProgressIndicator()
+                            ? Center(child: CircularProgressIndicator())
                             : LongButton(
                                 onPressed: () {
                                   saveData();
