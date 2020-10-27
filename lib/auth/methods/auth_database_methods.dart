@@ -41,6 +41,7 @@ class AuthDatabaseMethods {
     @required String phoneNumber,
     @required String uniName,
   }) {
+    print('saving in db');
     return shopOwnerDataCollectionRef.document(uid).setData(
       {
         'uid': uid,
@@ -51,6 +52,8 @@ class AuthDatabaseMethods {
         'phoneNumber': phoneNumber,
         'uniName': uniName,
         'dateJoined': Timestamp.now(),
+        'numberOfProducts': 0,
+        'isPartner': false,
       },
       merge: true,
     );

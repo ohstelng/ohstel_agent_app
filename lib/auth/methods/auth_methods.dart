@@ -41,7 +41,7 @@ class AuthService {
 
       return userFromFirebase(user);
     } catch (e) {
-      print(e.toString());
+
       Fluttertoast.showToast(msg: e.message, toastLength: Toast.LENGTH_LONG);
       return null;
     }
@@ -57,23 +57,30 @@ class AuthService {
     @required String uniName,
     @required String address,
   }) async {
+
     try {
       AuthResult result = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       FirebaseUser user = result.user;
 
-//      await getUserDetails(uid: user.uid);
 
-//      return userFromFirebase(user);
+      await shopOwnerDataCollectionRef
+          .where('shopName', isEqualTo: shopName)
+          .getDocuments()
+          .then((shop) {
 
-      //TODO: implement checking if user already exist as a shop owner be4
-      //TODO: implement checking if user already exist as a shop owner be4
-      //TODO: implement checking if user already exist as a shop owner be4
-      //TODO: implement checking if user already exist as a shop owner be4 creating new shop owner
+
+        if (shop.documents.length > 1) {
+
+          throw Exception('User Name Already Taken!!');
+        }
+      });
 
       if (user.uid != null) {
+
         // add user details to  shop firestore database
         await AuthDatabaseMethods().createShopOwnerDataInFirestore(
           uid: user.uid,
@@ -84,6 +91,7 @@ class AuthService {
           phoneNumber: phoneNumber,
           uniName: uniName,
         );
+
 
         // save user info to local database using hive
         await saveUserDataToDb(userData: {
@@ -97,10 +105,13 @@ class AuthService {
         });
       }
 
+
       return userFromFirebase(user);
-    } catch (e) {
+    } catch (e, s) {
+
+
       Fluttertoast.showToast(msg: e.message, toastLength: Toast.LENGTH_LONG);
-      print(e.toString());
+
       return null;
     }
   }
@@ -111,23 +122,17 @@ class AuthService {
       deleteUserDataToDb();
       return await auth.signOut();
     } catch (e) {
-      print(e);
+
       Fluttertoast.showToast(msg: '${e.message}');
     }
   }
 
   Future getUserDetails({@required String uid}) async {
-    print(
-        'uuuuuuuuuuuuuuuuuuuuuuuuiiiiiiiiiiiiiiiiiiiiiiiiiiiiddddddddddddddddddd');
-    print(uid.trim());
     try {
-      DocumentSnapshot document =
-          await shopOwnerDataCollectionRef.document(uid).get();
-      print('pppppppppppppppppppppppppppppppppppppppppppppppppppppp');
-      print(document.data);
+      DocumentSnapshot document = await shopOwnerDataCollectionRef.document(uid).get();
+
       saveUserDataToDb(userData: document.data);
     } catch (e) {
-      print(e);
       Fluttertoast.showToast(msg: '${e.message}');
     }
   }
@@ -139,32 +144,12 @@ class AuthService {
     userData.remove('dateJoined');
 
     userDataBox.put(key, value);
-    print('saved');
+
   }
 
   void deleteUserDataToDb() {
     Box<Map> userDataBox = Hive.box<Map>('userDataBox');
     final key = 0;
-
     userDataBox.delete(key);
   }
-
-//  Future<void> update() async {
-//    final CollectionReference hostelCollectionRef =
-//        Firestore.instance.collection('hostelBookings');
-//
-//    try {
-//      QuerySnapshot querySnapshot = await hostelCollectionRef.getDocuments();
-//      for (var i = 0; i < querySnapshot.documents.length; i++) {
-//        String id = querySnapshot.documents[i].documentID;
-//        await hostelCollectionRef.document(id).updateData({
-//          'uniName': 'unilorin',
-//        });
-//        print(id);
-//      }
-//    } catch (e) {
-//      print(e);
-//      Fluttertoast.showToast(msg: '${e.message}');
-//    }
-//  }
 }
