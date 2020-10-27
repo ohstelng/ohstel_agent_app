@@ -40,6 +40,7 @@ class _AllLaundryOrderState extends State<AllLaundryOrder> {
       @required LaundryStatus type}) async {
     List<Map> _updatedLaundryList = [];
     bool doneWith = false;
+    int numberOfDeliveredClothes = 0;
 
     for (var i = 0; i < laundry.listOfLaundry.length; i++) {
       Map eachLaundry = laundry.listOfLaundry[i];
@@ -55,13 +56,17 @@ class _AllLaundryOrderState extends State<AllLaundryOrder> {
         }
 
         _updatedLaundryList.add(eachLaundry);
+      } else {
+        _updatedLaundryList.add(eachLaundry);
       }
 
       if (eachLaundry['status'] == 'Delivered') {
-        doneWith = true;
-      } else {
-        doneWith = false;
+        numberOfDeliveredClothes++;
       }
+    }
+
+    if (numberOfDeliveredClothes == laundry.listOfLaundry.length) {
+      doneWith = true;
     }
 
     print(laundry.id);

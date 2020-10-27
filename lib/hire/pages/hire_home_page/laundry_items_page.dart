@@ -85,133 +85,79 @@ class _LaundryItemPageState extends State<LaundryItemPage> {
                 builder: (context, snap) {
                   if (!snap.hasData) {
                     return Center(child: CircularProgressIndicator());
-                  }
-                  DocumentSnapshot doc = snap.data;
-                  HireWorkerModel hireWorker =
-                      HireWorkerModel.fromMap(doc.data);
-
-                  return Card(
-                    child: Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(hireWorker.workerName),
-                          (hireWorker.laundryList != null)
-                              ? ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: hireWorker.laundryList.length,
-                                  itemBuilder: (context, index) {
-                                    LaundryBookingModel currentLaundry =
-                                        LaundryBookingModel.fromMap(
-                                      hireWorker.laundryList[index],
-                                    );
-                                    return Container(
-                                      margin: EdgeInsets.all(10.0),
-                                      padding: EdgeInsets.all(10.0),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                              'Cloth Type: ${currentLaundry.clothTypes}'),
-                                          Text(
-                                              'Wash Only = ${currentLaundry.laundryModeAndPrice['Wash Only']}'),
-                                          Text(
-                                              'Dry Clean = ${currentLaundry.laundryModeAndPrice['Dry Clean']}'),
-                                          Text(
-                                              'Wash And Iron = ${currentLaundry.laundryModeAndPrice['Wash And Iron']}'),
-                                          Text(
-                                              'Iron Only = ${currentLaundry.laundryModeAndPrice['Iron Only']}'),
-                                          FlatButton(
-                                            onPressed: () {
-                                              ask(data: currentLaundry.toMap());
-                                            },
-                                            child: Text('Delete'),
-                                            color: Colors.red,
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Text('None Found!'),
-                        ],
+                  } else if (snap.data.data == null) {
+                    return Center(
+                      child: Text(
+                        'No data Found!!',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  );
-//          return Container(
-////              margin: EdgeInsets.all(5.0),
-//            child: Card(
-//              elevation: 2.0,
-//              child: ExpansionTile(
-//                title: Text('${laundry.clothesOwnerName}'),
-//                subtitle: Text('${laundry.timestamp.toDate()}'),
-//                children: [
-//                  Container(
-//                    width: double.infinity,
-//                    margin: EdgeInsets.all(10.0),
-//                    child: Column(
-//                      crossAxisAlignment: CrossAxisAlignment.start,
-//                      mainAxisAlignment: MainAxisAlignment.start,
-//                      mainAxisSize: MainAxisSize.min,
-//                      children: [
-//                        Text('Owner Name: ${laundry.clothesOwnerName}'),
-//                        Text(
-//                            'Owner Email: ${laundry.clothesOwnerEmail}'),
-//                        Text(
-//                            'Owner Number: ${laundry.clothesOwnerPhoneNumber}'),
-//                        Text(
-//                            'Pick Up Address: ${addressDetails.pickUpAddress['address']}, ${addressDetails.pickUpAddress['areaName']}. onCampus: ${addressDetails.pickUpAddress['onCampus']}'),
-//                        Text(
-//                            'Pick Up Number: ${addressDetails.pickUpNumber}'),
-//                        Text(
-//                            'Pick Up Date: ${addressDetails.pickUpDate}'),
-//                        Text(
-//                            'Pick Up Time: ${addressDetails.pickUpTime}'),
-//                        Text(
-//                            'Drop Off Address: ${addressDetails.dropOffAddress['address']}, ${addressDetails.dropOffAddress['areaName']}. onCampus: ${addressDetails.dropOffAddress['onCampus']}'),
-//                        Text(
-//                            'Drop off Number: ${addressDetails.dropOffNumber}'),
-//                      ],
-//                    ),
-//                  ),
-//                  ListView.builder(
-//                    shrinkWrap: true,
-//                    physics: NeverScrollableScrollPhysics(),
-//                    itemCount: laundry.listOfLaundry.length,
-//                    itemBuilder: (context, index) {
-//                      LaundryBookingBasketModel currentLaundry =
-//                      LaundryBookingBasketModel.fromMap(
-//                          laundry.listOfLaundry[index]);
-//                      return InkWell(
-//                        onTap: () {
-//                          optionPopUp(laundry: laundry, index: index);
-//                        },
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            border: Border.all(color: Colors.black),
-//                          ),
-//                          margin: EdgeInsets.all(10.0),
-//                          child: Row(
-//                            children: [
-//                              displayMultiPic(
-//                                  imageList: [currentLaundry.imageUrl]),
-//                              details(laundryBooking: currentLaundry),
-//                            ],
-//                          ),
-//                        ),
-//                      );
-//                    },
-//                  ),
-//                ],
-//              ),
-//            ),
-//          );
+                    );
+                  } else {
+                    DocumentSnapshot doc = snap.data;
+                    HireWorkerModel hireWorker =
+                        HireWorkerModel.fromMap(doc.data);
+
+                    return Card(
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(hireWorker.workerName),
+                            (hireWorker.laundryList != null)
+                                ? ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: hireWorker.laundryList.length,
+                                    itemBuilder: (context, index) {
+                                      LaundryBookingModel currentLaundry =
+                                          LaundryBookingModel.fromMap(
+                                        hireWorker.laundryList[index],
+                                      );
+                                      return Container(
+                                        margin: EdgeInsets.all(10.0),
+                                        padding: EdgeInsets.all(10.0),
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.black),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                                'Cloth Type: ${currentLaundry.clothTypes}'),
+                                            Text(
+                                                'Wash Only = ${currentLaundry.laundryModeAndPrice['Wash Only']}'),
+                                            Text(
+                                                'Dry Clean = ${currentLaundry.laundryModeAndPrice['Dry Clean']}'),
+                                            Text(
+                                                'Wash And Iron = ${currentLaundry.laundryModeAndPrice['Wash And Iron']}'),
+                                            Text(
+                                                'Iron Only = ${currentLaundry.laundryModeAndPrice['Iron Only']}'),
+                                            FlatButton(
+                                              onPressed: () {
+                                                ask(
+                                                    data:
+                                                        currentLaundry.toMap());
+                                              },
+                                              child: Text('Delete'),
+                                              color: Colors.red,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : Text('None Found!'),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
       ),

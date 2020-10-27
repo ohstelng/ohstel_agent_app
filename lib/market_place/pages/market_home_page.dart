@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/market_place/pages/add_new_product_page.dart';
+import 'package:ohostel_hostel_agent_app/market_place/pages/add_partner_page.dart';
 import 'package:ohostel_hostel_agent_app/market_place/pages/all_market_orders_page.dart';
 import 'package:ohostel_hostel_agent_app/market_place/pages/register_new_market_owner_page.dart';
 import 'package:ohostel_hostel_agent_app/market_place/pages/shop_owner_orders_page.dart';
@@ -31,6 +32,26 @@ class _MarketHomePageState extends State<MarketHomePage> {
               },
               child: Text(
                 'Add New Shop',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: FlatButton(
+              color: Colors.green,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AddPartnerPage(),
+                  ),
+                );
+              },
+              child: Text(
+                'Add Partner Page',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

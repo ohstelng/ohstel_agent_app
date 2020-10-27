@@ -125,4 +125,54 @@ class MarketMethods {
       Fluttertoast.showToast(msg: '$err');
     }
   }
+
+  Future<void> makePartneredShop({@required String shopName}) async {
+    try {
+      await shopCollection
+          .where('shopName', isEqualTo: shopName)
+          .getDocuments()
+          .then((shop) async {
+        print(shop.documents.length);
+
+        /// since there can be only one shop with a particular name "shop.documents"
+        /// will return an array of one element. So we'll just take the first
+        String shopId = shop.documents[0].documentID;
+
+        await shopCollection.document(shopId).updateData({
+          'isPartner': true,
+        });
+
+        Fluttertoast.showToast(msg: 'Done');
+      });
+    } catch (e, s) {
+      print(e);
+      print(s);
+      Fluttertoast.showToast(msg: 'Error: $e');
+    }
+  }
+
+  Future<void> undoPartneredShop({@required String shopName}) async {
+    try {
+      await shopCollection
+          .where('shopName', isEqualTo: shopName)
+          .getDocuments()
+          .then((shop) async {
+        print(shop.documents.length);
+
+        /// since there can be only one shop with a particular name "shop.documents"
+        /// will return an array of one element. So we'll just take the first
+        String shopId = shop.documents[0].documentID;
+
+        await shopCollection.document(shopId).updateData({
+          'isPartner': false,
+        });
+
+        Fluttertoast.showToast(msg: 'Undo Done');
+      });
+    } catch (e, s) {
+      print(e);
+      print(s);
+      Fluttertoast.showToast(msg: 'Error: $e');
+    }
+  }
 }
