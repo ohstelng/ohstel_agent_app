@@ -12,6 +12,7 @@ import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
 import '../../constant.dart';
 
+
 class SignUpPage extends StatefulWidget {
   final Function toggleView;
 

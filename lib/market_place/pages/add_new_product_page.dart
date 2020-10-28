@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../constant.dart';
 
+
 class AddNewMarketProductPage extends StatefulWidget {
   @override
   _AddNewMarketProductPageState createState() =>

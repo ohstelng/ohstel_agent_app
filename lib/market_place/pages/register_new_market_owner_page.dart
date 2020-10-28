@@ -82,7 +82,7 @@ class _SignUpNewShopOwnerState extends State<SignUpNewShopOwner> {
   }
 
   Future<Map> getAllUniNamesFromApi() async {
-    String url = baseApiUrl+"/hostel_api/searchKeys";
+    String url = baseApiUrl + "/hostel_api/searchKeys";
     var response = await http.get(url);
     Map data = json.decode(response.body);
 

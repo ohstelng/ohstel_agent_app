@@ -19,6 +19,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../constant.dart';
 
+
 class AddNewFastFood extends StatefulWidget {
   @override
   _AddNewFastFoodState createState() => _AddNewFastFoodState();
