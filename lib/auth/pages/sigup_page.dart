@@ -10,6 +10,8 @@ import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_textfield.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
+import '../../constant.dart';
+
 class SignUpPage extends StatefulWidget {
   final Function toggleView;
 
@@ -83,7 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future<Map> getAllUniNamesFromApi() async {
-    String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
+    String url = baseApiUrl+"/hostel_api/searchKeys";
     var response = await http.get(url);
     Map data = json.decode(response.body);
 

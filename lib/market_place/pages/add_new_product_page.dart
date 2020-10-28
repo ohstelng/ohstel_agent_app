@@ -12,6 +12,8 @@ import 'package:ohostel_hostel_agent_app/market_place/market_methods.dart';
 import 'package:ohostel_hostel_agent_app/market_place/models/product_model.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../constant.dart';
+
 class AddNewMarketProductPage extends StatefulWidget {
   @override
   _AddNewMarketProductPageState createState() =>
@@ -43,7 +45,7 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
   List sizeList = [];
 
   Future getUniList() async {
-    String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
+    String url = baseApiUrl+"/hostel_api/searchKeys";
     var response = await http.get(url);
     var result = json.decode(response.body);
     print(result);

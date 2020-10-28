@@ -17,6 +17,8 @@ import 'package:ohostel_hostel_agent_app/widgets/custom_smallButton.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 import 'package:uuid/uuid.dart';
 
+import '../../constant.dart';
+
 class AddNewFastFood extends StatefulWidget {
   @override
   _AddNewFastFoodState createState() => _AddNewFastFoodState();
@@ -127,7 +129,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   }
 
   Future getUniList() async {
-    String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
+    String url = baseApiUrl+"/hostel_api/searchKeys";
     var response = await http.get(url);
     var result = json.decode(response.body);
     print(result);
@@ -273,8 +275,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   Future<Map> getAreaNamesFromApi() async {
     String _uniName = uniName ?? await HiveMethods().getUniName();
     debugPrint('$_uniName');
-    String url =
-        'https://quiz-demo-de79d.appspot.com/food_api/${_uniName.toLowerCase()}';
+    String url = baseApiUrl+'/food_api/${_uniName.toLowerCase()}';
     var response = await http.get(url);
     Map data = json.decode(response.body);
     return data;

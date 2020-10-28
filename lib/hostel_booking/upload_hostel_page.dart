@@ -15,6 +15,8 @@ import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 
+import '../constant.dart';
+
 class UploadHostelPage extends StatefulWidget {
   @override
   _UploadHostelPageState createState() => _UploadHostelPageState();
@@ -54,7 +56,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   bool isSending = false;
 
   Future getUniList() async {
-    String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
+    String url = baseApiUrl+"/hostel_api/searchKeys";
     var response = await http.get(url);
     var result = json.decode(response.body);
     print(result);

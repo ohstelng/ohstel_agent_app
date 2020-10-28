@@ -14,6 +14,7 @@ import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as style;
 import 'package:uuid/uuid.dart';
 
+import '../../../constant.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_smallButton.dart';
 import '../../../widgets/custom_textfield.dart';
@@ -53,7 +54,7 @@ class _AddHireWorkerPageState extends State<AddHireWorkerPage> {
   }
 
   Future getUniList() async {
-    String url = "https://quiz-demo-de79d.appspot.com/hostel_api/searchKeys";
+    String url = baseApiUrl+"/hostel_api/searchKeys";
     var response = await http.get(url);
     var result = json.decode(response.body);
     print(result);
