@@ -19,6 +19,13 @@ class FoodMethods {
       DocumentSnapshot doc =
           await foodCollectionRef.document(foodModel.fastFoodName).get();
 
+      ///check if the bact time list is empty or length equal 5
+      if (foodModel.batchTimeList.length != 0 ||
+          foodModel.batchTimeList.length != 5) {
+        throw Exception(
+            'Batch Time List Must Be Either Empty Or Have 5 Item In It.');
+      }
+
       if (doc.exists) {
         print('Fast Food Already Exist');
         throw Exception('Fast Food Already Exist');
