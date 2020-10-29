@@ -27,7 +27,7 @@ class AddNewFastFood extends StatefulWidget {
 class _AddNewFastFoodState extends State<AddNewFastFood> {
   StreamController _uniNameController = StreamController.broadcast();
   final formKey = GlobalKey<FormState>();
-  bool batchTimeList = false;
+  bool hasBatchTimeList = false;
   TimeOfDay time = TimeOfDay.now();
   bool loading = false;
   String fastFoodName;
@@ -245,7 +245,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
           uniName: uniName.toLowerCase(),
           locationName: areaName,
           display: true,
-          batchTimeList: batchTimeList,
+          batchTimeList: hasBatchTimeList,
         );
 
         print(fastFood.toMap());
@@ -681,22 +681,30 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   }
 
   Widget showSizeWidget() {
-    return Column(
-      children: [
-        Center(
-          child: FlatButton(
-            onPressed: () async {
-              setState(() {});
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Checkbox(
+            value: hasBatchTimeList,
+            activeColor: Colors.green,
+            onChanged: (bool newValue) {
+              setState(() {
+                hasBatchTimeList = newValue;
+              });
+              print(hasBatchTimeList);
             },
-            color: Colors.green,
-            child: Text(
-              'Add Batch Time!',
-              style: TextStyle(color: Colors.white),
+          ),
+          Text(
+            'Has Batch Delivery',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
           ),
-        ),
-
-      ],
+        ],
+      ),
     );
   }
 }
