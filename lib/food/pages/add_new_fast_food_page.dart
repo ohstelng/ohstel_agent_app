@@ -27,7 +27,7 @@ class AddNewFastFood extends StatefulWidget {
 class _AddNewFastFoodState extends State<AddNewFastFood> {
   StreamController _uniNameController = StreamController.broadcast();
   final formKey = GlobalKey<FormState>();
-  List<String> batchTimeList = List<String>();
+  bool batchTimeList = false;
   TimeOfDay time = TimeOfDay.now();
   bool loading = false;
   String fastFoodName;
@@ -47,16 +47,6 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   File _foodImage;
   String _foodImageUrl;
   bool isSending = false;
-
-  Future<void> pickTime() async {
-    String selectedBatchTime = '';
-    TimeOfDay t = await showTimePicker(context: context, initialTime: time);
-
-    if (t != null) {
-      selectedBatchTime = 'Time: ${t.hour}:${t.minute}';
-      batchTimeList.add(selectedBatchTime);
-    }
-  }
 
   void _showEditUniDailog() {
     showDialog(
@@ -696,7 +686,6 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
         Center(
           child: FlatButton(
             onPressed: () async {
-              await pickTime();
               setState(() {});
             },
             color: Colors.green,
@@ -706,27 +695,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
             ),
           ),
         ),
-        Container(
-          height: 60,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: batchTimeList.length,
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  color: Colors.transparent,
-                ),
-                padding: EdgeInsets.all(10.0),
-                margin: EdgeInsets.all(10.0),
-                child: Center(
-                  child: Text('${batchTimeList[index]}'),
-                ),
-              );
-            },
-          ),
-        ),
+
       ],
     );
   }

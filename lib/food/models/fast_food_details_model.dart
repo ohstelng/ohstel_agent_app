@@ -8,7 +8,7 @@ class FastFoodModel {
   List itemDetails;
   List extraItems;
   List itemCategoriesList;
-  List batchTimeList;
+  bool batchTimeList;
   bool haveExtras;
   String uniName;
   String locationName;
