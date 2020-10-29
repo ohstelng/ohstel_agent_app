@@ -8,6 +8,7 @@ class FastFoodModel {
   List itemDetails;
   List extraItems;
   List itemCategoriesList;
+  List batchTimeList;
   bool haveExtras;
   String uniName;
   String locationName;
@@ -21,6 +22,7 @@ class FastFoodModel {
     @required this.itemDetails,
     @required this.extraItems,
     @required this.itemCategoriesList,
+    @required this.batchTimeList,
     @required this.haveExtras,
     @required this.uniName,
     @required this.locationName,
@@ -35,6 +37,7 @@ class FastFoodModel {
     this.itemDetails = mapData['itemDetails'];
     this.extraItems = mapData['extraItems'];
     this.itemCategoriesList = mapData['itemCategoriesList'];
+    this.batchTimeList = mapData['batchTimeList'];
     this.haveExtras = mapData['haveExtras'];
     this.uniName = mapData['uniName'];
     this.locationName = mapData['locationName'];
@@ -50,6 +53,7 @@ class FastFoodModel {
     data['itemDetails'] = this.itemDetails;
     data['extraItems'] = this.extraItems;
     data['itemCategoriesList'] = this.itemCategoriesList;
+    data['batchTimeList'] = this.batchTimeList;
     data['haveExtras'] = this.haveExtras;
     data['uniName'] = this.uniName;
     data['locationName'] = this.locationName;

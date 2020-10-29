@@ -19,7 +19,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../constant.dart';
 
-
 class AddNewFastFood extends StatefulWidget {
   @override
   _AddNewFastFoodState createState() => _AddNewFastFoodState();
@@ -28,6 +27,8 @@ class AddNewFastFood extends StatefulWidget {
 class _AddNewFastFoodState extends State<AddNewFastFood> {
   StreamController _uniNameController = StreamController.broadcast();
   final formKey = GlobalKey<FormState>();
+  List<String> batchTimeList = List<String>();
+  TimeOfDay time = TimeOfDay.now();
   bool loading = false;
   String fastFoodName;
   String address;
@@ -46,6 +47,16 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   File _foodImage;
   String _foodImageUrl;
   bool isSending = false;
+
+  Future<void> pickTime() async {
+    String selectedBatchTime = '';
+    TimeOfDay t = await showTimePicker(context: context, initialTime: time);
+
+    if (t != null) {
+      selectedBatchTime = 'Time: ${t.hour}:${t.minute}';
+      batchTimeList.add(selectedBatchTime);
+    }
+  }
 
   void _showEditUniDailog() {
     showDialog(
@@ -130,7 +141,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   }
 
   Future getUniList() async {
-    String url = baseApiUrl+"/hostel_api/searchKeys";
+    String url = baseApiUrl + "/hostel_api/searchKeys";
     var response = await http.get(url);
     var result = json.decode(response.body);
     print(result);
@@ -153,10 +164,6 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
         fastFoodImages = File(result.files.single.path);
       }
 
-//      fastFoodImages = await FilePicker.getFile(
-//        type: FileType.custom,
-//        allowedExtensions: ['jpg', 'png', 'jpg'],
-//      );
       setState(() {});
     } on Exception catch (e) {
       print(e);
@@ -171,11 +178,6 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
     });
 
     try {
-//      _foodImage = await FilePicker.getFile(
-//        type: FileType.custom,
-//        allowedExtensions: ['jpg', 'png', 'jpg'],
-//      );
-
       FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'png', 'jpg'],
@@ -253,6 +255,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
           uniName: uniName.toLowerCase(),
           locationName: areaName,
           display: true,
+          batchTimeList: batchTimeList,
         );
 
         print(fastFood.toMap());
@@ -276,7 +279,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   Future<Map> getAreaNamesFromApi() async {
     String _uniName = uniName ?? await HiveMethods().getUniName();
     debugPrint('$_uniName');
-    String url = baseApiUrl+'/food_api/${_uniName.toLowerCase()}';
+    String url = baseApiUrl + '/food_api/${_uniName.toLowerCase()}';
     var response = await http.get(url);
     Map data = json.decode(response.body);
     return data;
@@ -476,6 +479,9 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                             ),
                           ],
                         ),
+                        Divider(),
+                        showSizeWidget(),
+                        Divider(),
                         Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -516,9 +522,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 8,
-                        ),
+                        SizedBox(height: 8),
                         Text(
                           'Add Item',
                           style: Styles.body1TextStyle,
@@ -683,6 +687,47 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                 ],
               ),
       ),
+    );
+  }
+
+  Widget showSizeWidget() {
+    return Column(
+      children: [
+        Center(
+          child: FlatButton(
+            onPressed: () async {
+              await pickTime();
+              setState(() {});
+            },
+            color: Colors.green,
+            child: Text(
+              'Add Batch Time!',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        Container(
+          height: 60,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: batchTimeList.length,
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  color: Colors.transparent,
+                ),
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.all(10.0),
+                child: Center(
+                  child: Text('${batchTimeList[index]}'),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
