@@ -245,7 +245,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
           uniName: uniName.toLowerCase(),
           locationName: areaName,
           display: true,
-          batchTimeList: hasBatchTimeList,
+          hasBatchTime: hasBatchTimeList,
         );
 
         print(fastFood.toMap());
@@ -470,7 +470,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                           ],
                         ),
                         Divider(),
-                        showSizeWidget(),
+                        showHasBatchWidget(),
                         Divider(),
                         Center(
                           child: Column(
@@ -680,7 +680,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
     );
   }
 
-  Widget showSizeWidget() {
+  Widget showHasBatchWidget() {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Row(

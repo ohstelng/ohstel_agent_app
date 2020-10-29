@@ -119,7 +119,7 @@ class FoodMethods {
         uniName: 'all',
         locationName: 'none',
         display: false,
-        batchTimeList: false,
+        hasBatchTime: false,
       );
 
       DocumentSnapshot doc =
