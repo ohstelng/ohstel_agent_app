@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ohostel_hostel_agent_app/market_place/models/shop_model.dart';
 
 class AuthDatabaseMethods {
   // collection ref
@@ -32,29 +33,11 @@ class AuthDatabaseMethods {
     );
   }
 
-  Future createShopOwnerDataInFirestore({
-    @required String uid,
-    @required String email,
-    @required String fullName,
-    @required String shopName,
-    @required String address,
-    @required String phoneNumber,
-    @required String uniName,
-  }) {
+  Future createShopOwnerDataInFirestore({@required ShopModel shopData}) {
     print('saving in db');
-    return shopOwnerDataCollectionRef.document(uid).setData(
-      {
-        'uid': uid,
-        'email': email,
-        'fullName': fullName,
-        'shopName': shopName,
-        'address': address,
-        'phoneNumber': phoneNumber,
-        'uniName': uniName,
-        'dateJoined': Timestamp.now(),
-        'numberOfProducts': 0,
-        'isPartner': false,
-      },
+
+    return shopOwnerDataCollectionRef.document(shopData.uid).setData(
+    shopData.toMap(),
       merge: true,
     );
   }

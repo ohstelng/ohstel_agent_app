@@ -27,9 +27,10 @@ class _ToggleBetweenLoginAndSignUpPageState
   Widget build(BuildContext context) {
     if (showLogInPage) {
       return LogInPage(toggleView: toggleView);
-    } else {
-      return SignUpPage(toggleView: toggleView);
     }
+//    else {
+//      return SignUpPage(toggleView: toggleView);
+//    }
   }
 }
 

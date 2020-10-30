@@ -6,6 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:ohostel_hostel_agent_app/auth/methods/auth_database_methods.dart';
 import 'package:ohostel_hostel_agent_app/auth/models/login_user_model.dart';
 import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
+import 'package:ohostel_hostel_agent_app/market_place/models/shop_model.dart';
 
 class AuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -41,7 +42,6 @@ class AuthService {
 
       return userFromFirebase(user);
     } catch (e) {
-
       Fluttertoast.showToast(msg: e.message, toastLength: Toast.LENGTH_LONG);
       return null;
     }
@@ -53,11 +53,13 @@ class AuthService {
     @required String password,
     @required String fullName,
     @required String shopName,
-    @required String phoneNumber,
+    @required int phoneNumber,
     @required String uniName,
     @required String address,
+    @required String imageUrl,
+    @required int numberOfProduct,
+    @required bool isPartner,
   }) async {
-
     try {
       AuthResult result = await auth.signInWithEmailAndPassword(
         email: email,
@@ -66,52 +68,45 @@ class AuthService {
 
       FirebaseUser user = result.user;
 
-
       await shopOwnerDataCollectionRef
           .where('shopName', isEqualTo: shopName)
           .getDocuments()
           .then((shop) {
-
-
         if (shop.documents.length > 1) {
-
           throw Exception('User Name Already Taken!!');
         }
       });
 
       if (user.uid != null) {
+        ShopModel shopData = ShopModel(
+          shopName: shopName,
+          uid: user.uid,
+          address: address,
+          email: email,
+          phoneNumber: phoneNumber,
+          fullName: fullName,
+          uniName: uniName,
+          imageUrl: imageUrl,
+          numberOfProducts: numberOfProduct,
+          isPartner: isPartner,
+        );
 
         // add user details to  shop firestore database
         await AuthDatabaseMethods().createShopOwnerDataInFirestore(
-          uid: user.uid,
-          email: email,
-          fullName: fullName,
-          address: address,
-          shopName: shopName,
-          phoneNumber: phoneNumber,
-          uniName: uniName,
+          shopData: shopData,
         );
 
-
         // save user info to local database using hive
-        await saveUserDataToDb(userData: {
-          'uid': user.uid,
-          'email': email,
-          'fullName': fullName,
-          'shopName': shopName,
-          'address': address,
-          'phoneNumber': phoneNumber,
-          'uniName': uniName,
-        });
+        Map data = shopData.toMap();
+        data['dateJoined'] = '';
+        await saveUserDataToDb(userData: data);
       }
-
 
       return userFromFirebase(user);
     } catch (e, s) {
-
-
+      print(e);
+      print(s);
       Fluttertoast.showToast(msg: e.message, toastLength: Toast.LENGTH_LONG);
-
       return null;
     }
   }
@@ -122,14 +117,14 @@ class AuthService {
       deleteUserDataToDb();
       return await auth.signOut();
     } catch (e) {
-
       Fluttertoast.showToast(msg: '${e.message}');
     }
   }
 
   Future getUserDetails({@required String uid}) async {
     try {
-      DocumentSnapshot document = await shopOwnerDataCollectionRef.document(uid).get();
+      DocumentSnapshot document =
+          await shopOwnerDataCollectionRef.document(uid).get();
 
       saveUserDataToDb(userData: document.data);
     } catch (e) {
@@ -144,7 +139,6 @@ class AuthService {
     userData.remove('dateJoined');
 
     userDataBox.put(key, value);
-
   }
 
   void deleteUserDataToDb() {

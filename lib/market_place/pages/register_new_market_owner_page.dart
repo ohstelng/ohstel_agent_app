@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,6 +12,8 @@ import 'package:ohostel_hostel_agent_app/auth/methods/auth_methods.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_textfield.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../constant.dart';
 
@@ -21,6 +26,7 @@ class _SignUpNewShopOwnerState extends State<SignUpNewShopOwner> {
   bool loading = false;
   final formKey = GlobalKey<FormState>();
   AuthService authService = AuthService();
+  File imageFile;
 
   String firstName;
   String email;
@@ -32,6 +38,7 @@ class _SignUpNewShopOwnerState extends State<SignUpNewShopOwner> {
   String phoneNumber;
   String address;
   Timestamp timeCreated;
+  String imageUrl;
 
   String fullName;
   String password;
@@ -65,15 +72,25 @@ class _SignUpNewShopOwnerState extends State<SignUpNewShopOwner> {
 
   Future<void> signUpUser() async {
     try {
+      if (imageFile != null) {
+        await getUrls();
+      }
+
       await authService.registerWithEmailAndPassword(
         email: email,
         password: password,
         fullName: fullName,
         shopName: shopName,
         address: address,
-        phoneNumber: phoneNumber,
+        phoneNumber: int.parse(phoneNumber),
         uniName: uniName,
+        isPartner: false,
+        numberOfProduct: 0,
+        imageUrl: imageUrl,
       );
+
+      Fluttertoast.showToast(msg: 'Done!');
+      formKey.currentState.reset();
     } catch (e, s) {
       print(e);
       print(s);
@@ -87,6 +104,46 @@ class _SignUpNewShopOwnerState extends State<SignUpNewShopOwner> {
     Map data = json.decode(response.body);
 
     return data;
+  }
+
+  Future<void> selectItemImage() async {
+    if (!mounted) return;
+    setState(() {
+      imageFile = null;
+    });
+
+    try {
+      FilePickerResult result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png', 'jpg'],
+      );
+
+      if (result != null) {
+        imageFile = File(result.files.single.path);
+      }
+
+      setState(() {});
+    } on Exception catch (e) {
+      print(e);
+      Fluttertoast.showToast(msg: '$e');
+    }
+  }
+
+  Future<void> getUrls() async {
+    try {
+      StorageReference storageReference =
+          FirebaseStorage.instance.ref().child('food/${Uuid().v1()}');
+
+      StorageUploadTask uploadTask = storageReference.putFile(imageFile);
+
+      await uploadTask.onComplete;
+      print('File Uploaded');
+
+      imageUrl = await storageReference.getDownloadURL();
+    } catch (err) {
+      print(err);
+      Fluttertoast.showToast(msg: err);
+    }
   }
 
   @override
@@ -349,6 +406,44 @@ class _SignUpNewShopOwnerState extends State<SignUpNewShopOwner> {
                     ],
                   ),
                 ),
+                SizedBox(height: 20),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(10.0),
+                        child: Text("Select Item Image", style: titleTextStyle),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          selectItemImage();
+                        },
+                        child: Container(
+                          decoration: boxDec,
+                          child: (imageFile == null)
+                              ? Container(
+                                  height: 150,
+                                  width: 150,
+                                  child: Icon(
+                                    Icons.add_a_photo,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              : Container(
+                                  height: 200,
+                                  width: 250,
+                                  child: Image.file(
+                                    imageFile,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
                 Text("By clicking on 'Create Account', you agree to"),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

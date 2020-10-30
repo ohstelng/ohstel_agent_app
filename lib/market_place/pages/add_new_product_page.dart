@@ -14,7 +14,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../constant.dart';
 
-
 class AddNewMarketProductPage extends StatefulWidget {
   @override
   _AddNewMarketProductPageState createState() =>
@@ -46,7 +45,7 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
   List sizeList = [];
 
   Future getUniList() async {
-    String url = baseApiUrl+"/hostel_api/searchKeys";
+    String url = baseApiUrl + "/hostel_api/searchKeys";
     var response = await http.get(url);
     var result = json.decode(response.body);
     print(result);
@@ -264,7 +263,6 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      // false = user must tap button, true = tap outside dialog
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text('Enter Size'),
