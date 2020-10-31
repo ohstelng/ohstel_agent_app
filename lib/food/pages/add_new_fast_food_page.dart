@@ -14,6 +14,7 @@ import 'package:ohostel_hostel_agent_app/food/models/food_details_model.dart';
 import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_smallButton.dart';
+import 'package:ohostel_hostel_agent_app/widgets/done_popup.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
 import 'package:uuid/uuid.dart';
 
@@ -250,6 +251,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
 
         print(fastFood.toMap());
         await FoodMethods().saveFoodToServer(foodModel: fastFood);
+        showDonePopUp(context: context, message: 'Done');
 
         setState(() {
           isSending = false;
@@ -259,6 +261,8 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
         fastFoodImages = null;
         _foodImage = null;
         uniName = null;
+        _value = null;
+        _itemCategory = null;
         _uniNameController.add(null);
       }
     } else {

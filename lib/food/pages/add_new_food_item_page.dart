@@ -1,13 +1,15 @@
 import 'dart:io';
-import 'package:flutter/rendering.dart';
-import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
-import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ohostel_hostel_agent_app/food/food_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/models/food_details_model.dart';
+import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/done_popup.dart';
+import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
 import 'package:uuid/uuid.dart';
 
 class AddNewFoodItemPage extends StatefulWidget {
@@ -34,10 +36,6 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
     });
 
     try {
-//      _foodImage = await FilePicker.getFile(
-//        type: FileType.custom,
-//        allowedExtensions: ['jpg', 'png', 'jpg'],
-//      );
       FilePickerResult result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'png', 'jpg'],
@@ -97,9 +95,9 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
           itemFastFoodName: fastFoodName,
         );
 
-//        print(item.toMap());
         await FoodMethods().saveFoodItemToServer(foodItems: item);
-//        Fluttertoast.showToast(msg: 'Done');
+        showDonePopUp(context: context, message: 'Done');
+        formKey.currentState.reset();
       }
 
       if (!mounted) return;
@@ -107,11 +105,10 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
         isSending = false;
         formKey.currentState.reset();
         _itemCategory = null;
+        _value = null;
         _foodImageUrl = null;
         _foodImage = null;
       });
-
-      formKey.currentState.reset();
     } else {
       Fluttertoast.showToast(msg: 'Pls Fill All Inputs');
       if (!mounted) return;
@@ -231,9 +228,9 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
                             onSaved: (value) =>
                                 _itemPrice = int.parse(value.trim()),
                           ),
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            margin: EdgeInsets.only(top: 8,bottom: 8,left: 8),
-                            decoration: boxDec,
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.only(top: 8, bottom: 8, left: 8),
+                          decoration: boxDec,
                         ),
                       ),
                     ],
@@ -266,7 +263,10 @@ class _AddNewFoodItemPageState extends State<AddNewFoodItemPage> {
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.all(10.0),
-                          child: Text("Item Image",style: titleTextStyle,),
+                          child: Text(
+                            "Item Image",
+                            style: titleTextStyle,
+                          ),
                         ),
                         InkWell(
                           onTap: () {

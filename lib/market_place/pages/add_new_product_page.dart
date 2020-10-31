@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:ohostel_hostel_agent_app/market_place/market_methods.dart';
 import 'package:ohostel_hostel_agent_app/market_place/models/product_model.dart';
+import 'package:ohostel_hostel_agent_app/widgets/done_popup.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../constant.dart';
@@ -238,7 +239,7 @@ class _AddNewMarketProductPageState extends State<AddNewMarketProductPage> {
         imagesFiles = List<File>();
         productOriginLocation = null;
       });
-      Fluttertoast.showToast(msg: 'Upload Done!!');
+      showDonePopUp(context: context, message: 'Upload Done!!');
     } else {
       Fluttertoast.showToast(msg: 'Fill All Details');
     }

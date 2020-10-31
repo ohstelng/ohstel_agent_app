@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ohostel_hostel_agent_app/food/food_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/models/food_details_model.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/done_popup.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
 import 'package:uuid/uuid.dart';
 
@@ -91,7 +92,7 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
 
         print(item.toMap());
         await FoodMethods().saveDrinkToServer(itemDetails: item);
-        Fluttertoast.showToast(msg: 'Done');
+        showDonePopUp(context: context, message: 'Done');
       }
 
       if (!mounted) return;
@@ -232,7 +233,7 @@ class _AddNewDrinksPageState extends State<AddNewDrinksPage> {
                   ),
                   SizedBox(height: 50),
                   isSending
-                      ? CircularProgressIndicator()
+                      ? Center(child: CircularProgressIndicator())
                       : LongButton(
                           onPressed: () {
                             saveData();

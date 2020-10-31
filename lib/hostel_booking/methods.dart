@@ -80,8 +80,8 @@ class HostelBookingMethods {
 
     QuerySnapshot querySnapshot = await hostelRef
         .where('uniName', isEqualTo: uniName)
-        .orderBy('hostelName', descending: true)
         .where('hostelName', isGreaterThanOrEqualTo: keyWord)
+        .orderBy('hostelName', descending: true)
         .startAfter([lastHostel.dateAdded])
         .limit(3)
         .getDocuments();
@@ -89,6 +89,7 @@ class HostelBookingMethods {
     for (var i = 0; i < querySnapshot.documents.length; i++) {
       hostelList.add(HostelModel.fromMap(querySnapshot.documents[i].data));
       print(querySnapshot.documents[i].data['id']);
+      print(querySnapshot.documents[i].data);
     }
 
     print(hostelList);

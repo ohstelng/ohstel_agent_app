@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ohostel_hostel_agent_app/food/food_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/models/extras_food_details.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
+import 'package:ohostel_hostel_agent_app/widgets/done_popup.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart';
 import 'package:uuid/uuid.dart';
 
@@ -95,13 +96,14 @@ class _AddExtraItemPageState extends State<AddExtraItemPage> {
 
       print(item.toMap());
       await FoodMethods().saveExtraFoodItemToServer(extraFoodItems: item);
-      Fluttertoast.showToast(msg: 'Done');
+      showDonePopUp(context: context, message: 'Done');
 
       if (!mounted) return;
       setState(() {
         isSending = false;
         formKey.currentState.reset();
         _extraItemCategory = null;
+        _value = null;
         _extraFoodImageUrl = null;
         _extraFoodImage = null;
       });

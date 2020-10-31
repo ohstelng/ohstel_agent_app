@@ -48,7 +48,7 @@ class FoodMethods {
           'itemDetails': FieldValue.arrayUnion([foodItems.toMap()]),
         });
 
-        Fluttertoast.showToast(msg: 'Hostel Added To DateBase');
+        Fluttertoast.showToast(msg: 'Item Added To DateBase');
       } else if (!doc.exists) {
         print(foodItems.itemFastFoodName);
         print('Fast Food Name Not Found');
@@ -73,6 +73,7 @@ class FoodMethods {
             .document(extraFoodItems.extraItemFastFoodName)
             .updateData({
           'extraItems': FieldValue.arrayUnion([extraFoodItems.toMap()]),
+          'haveExtras': true,
         });
 
         Fluttertoast.showToast(msg: 'Hostel Added To DateBase');

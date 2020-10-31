@@ -12,9 +12,9 @@ import 'package:location/location.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/methods.dart';
 import 'package:ohostel_hostel_agent_app/hostel_booking/model/hostel_model.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
-import 'package:uuid/uuid.dart';
+import 'package:ohostel_hostel_agent_app/widgets/done_popup.dart';
 import 'package:ohostel_hostel_agent_app/widgets/styles.dart' as Styles;
-
+import 'package:uuid/uuid.dart';
 
 import '../constant.dart';
 
@@ -53,11 +53,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   String dormType = 'Select Dorm Type';
   String uniName;
   String hostelAccommodationType = 'Accommodation Type';
-  String type;
   bool isSending = false;
 
   Future getUniList() async {
-    String url = baseApiUrl+"/hostel_api/searchKeys";
+    String url = baseApiUrl + "/hostel_api/searchKeys";
     var response = await http.get(url);
     var result = json.decode(response.body);
     print(result);
@@ -224,11 +223,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         allowedExtensions: ['jpg', 'png', 'jpg'],
       );
 
-      if(result != null) {
-         files = result.paths.map((path) => File(path)).toList();
+      if (result != null) {
+        files = result.paths.map((path) => File(path)).toList();
       }
 
-//      List<File> files = await FilePicker.getMultiFile();
       setState(() {
         imagesFiles = files;
       });
@@ -246,7 +244,6 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   Future getUrls() async {
     List<dynamic> imageUrl = [];
 
-//    print(images);
     for (var imageFile in imagesFiles) {
       String url = await postImage(imageFile);
       print(url);
@@ -275,6 +272,12 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
       );
       print(hostel.toMap());
       await HostelBookingMethods().saveHostelToServer(hostelModel: hostel);
+      showDonePopUp(context: context, message: 'Done');
+
+      formKey.currentState.reset();
+      dormType = 'Select Dorm Type';
+      hostelAccommodationType = 'Accommodation Type';
+      imagesFiles = null;
     }
   }
 
@@ -337,17 +340,19 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8,vertical: 16),
-        color: Colors.white,
-        child: ListView(
-          children: <Widget>[
-            Text('Upload Hostel',style: Styles.subTitle1TextStyle,),
-            form(),
-          ],
-        ),
-      )
-    );
+        body: Container(
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      color: Colors.white,
+      child: ListView(
+        children: <Widget>[
+          Text(
+            'Upload Hostel',
+            style: Styles.subTitle1TextStyle,
+          ),
+          form(),
+        ],
+      ),
+    ),);
   }
 
   Widget form() {
@@ -358,7 +363,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            decoration:Styles.boxDec,
+            decoration: Styles.boxDec,
             child: TextFormField(
               validator: (value) {
                 if (value.trim().isEmpty) {
@@ -375,7 +380,9 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
               ),
               onSaved: (value) => hostelName = value.trim(),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 8,),
+            padding: EdgeInsets.symmetric(
+              horizontal: 8,
+            ),
             margin: EdgeInsets.symmetric(vertical: 8),
           ),
           Container(
@@ -394,9 +401,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
               ),
               onSaved: (value) => hostelLocation = value.trim(),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 8,),
+            padding: EdgeInsets.symmetric(
+              horizontal: 8,
+            ),
             margin: EdgeInsets.symmetric(vertical: 8),
-
           ),
           Container(
             decoration: Styles.boxDec,
@@ -413,7 +421,10 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                 labelText: 'Hotel Area Name',
               ),
               onSaved: (value) => hostelAreaName = value.trim(),
-            ),padding: EdgeInsets.symmetric(horizontal: 8,),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: 8,
+            ),
             margin: EdgeInsets.symmetric(vertical: 8),
           ),
           Container(
@@ -442,7 +453,9 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                     margin: EdgeInsets.symmetric(vertical: 8),
                   ),
                 ),
-                SizedBox(width: 8,),
+                SizedBox(
+                  width: 8,
+                ),
                 Expanded(
                   flex: 1,
                   child: Container(
@@ -462,7 +475,9 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                       ),
                       onSaved: (value) => bedSpace = int.parse(value.trim()),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 8,),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                    ),
                     margin: EdgeInsets.symmetric(vertical: 8),
                   ),
                 ),
@@ -491,11 +506,15 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                       ),
                       onSaved: (value) => distanceFromSchoolInKm = value.trim(),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 8,),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                    ),
                     margin: EdgeInsets.symmetric(vertical: 8),
                   ),
                 ),
-                SizedBox(width: 8,),
+                SizedBox(
+                  width: 8,
+                ),
                 Expanded(
                   child: Container(
                     decoration: Styles.boxDec,
@@ -515,22 +534,28 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                       ),
                       onSaved: (value) => distanceTime = value.trim(),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 8,),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                    ),
                     margin: EdgeInsets.symmetric(vertical: 8),
                   ),
                 ),
-               Container(
-                 height: 45,
-                 padding: EdgeInsets.symmetric(horizontal: 5),
+                Container(
+                  height: 45,
+                  padding: EdgeInsets.symmetric(horizontal: 5),
                   child: FlatButton(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     color: Styles.themePrimary,
                     onPressed: () {
                       getUserLatAndLong();
                     },
                     child: isLoading
                         ? CircularProgressIndicator()
-                        : Text('Get Distance',style: TextStyle(color: Colors.white),),
+                        : Text(
+                            'Get Distance',
+                            style: TextStyle(color: Colors.white),
+                          ),
                   ),
                 ),
               ],
@@ -559,40 +584,39 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             margin: EdgeInsets.symmetric(vertical: 8),
           ),
           Container(
-            decoration: Styles.boxDec,
-            child: TextFormField(
-              validator: (value) {
-                if (value.trim().isEmpty) {
-                  return 'Hotel Features Can\'t Be Empty';
-                } else {
-                  return null;
-                }
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Hotel Features',
+              decoration: Styles.boxDec,
+              child: TextFormField(
+                validator: (value) {
+                  if (value.trim().isEmpty) {
+                    return 'Hotel Features Can\'t Be Empty';
+                  } else {
+                    return null;
+                  }
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Hotel Features',
+                ),
+                onSaved: (value) => extraFeatures = value.trim(),
               ),
-              onSaved: (value) => extraFeatures = value.trim(),
-            ),
               padding: EdgeInsets.symmetric(horizontal: 8),
-              margin: EdgeInsets.symmetric(vertical: 8)
-          ),
+              margin: EdgeInsets.symmetric(vertical: 8)),
           Container(
-            decoration: Styles.boxDec,
-            child: TextFormField(
-              validator: (value) {
-                if (value.trim().isEmpty) {
-                  return 'Hotel Features Can\'t Be Empty';
-                } else {
-                  return null;
-                }
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Any Land Mark Close By?',
+              decoration: Styles.boxDec,
+              child: TextFormField(
+                validator: (value) {
+                  if (value.trim().isEmpty) {
+                    return 'Hotel Features Can\'t Be Empty';
+                  } else {
+                    return null;
+                  }
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Any Land Mark Close By?',
+                ),
+                onSaved: (value) => landMark = value.trim(),
               ),
-              onSaved: (value) => landMark = value.trim(),
-            ),
               padding: EdgeInsets.symmetric(horizontal: 8),
               margin: EdgeInsets.symmetric(vertical: 8)),
           Container(
@@ -603,17 +627,21 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
                 Container(
                   height: 45,
                   child: FlatButton(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     color: Styles.themePrimary,
                     onPressed: () {
                       _showEditUniDailog();
                     },
-                    child: Text('Select Institution',style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      'Select Institution',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 Container(
                   height: 45,
-                  padding: EdgeInsets.symmetric(horizontal:8.0,vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Styles.themePrimary),
@@ -713,7 +741,6 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
 
   Widget dormTypeDropDown() {
     return Container(
-
       padding: EdgeInsets.all(20.0),
       child: DropdownButton(
           hint: Text('$dormType'),
@@ -744,7 +771,7 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
       padding: EdgeInsets.all(20.0),
       child: SingleChildScrollView(
         child: DropdownButton(
-            hint: Text('Accommodation'),
+            hint: Text('$hostelAccommodationType'),
             items: [
               DropdownMenuItem(
                 child: Text("Self Contain"),
@@ -778,8 +805,8 @@ class _UploadHostelPageState extends State<UploadHostelPage> {
             onChanged: (value) {
               setState(() {
                 hostelAccommodationType = value;
-                type = value;
               });
+              print(hostelAccommodationType);
             }),
       ),
     );
