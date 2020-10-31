@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "284920567955",
-    "firebase_url": "https://ohstel-46965.firebaseio.com",
-    "project_id": "ohstel-46965",
-    "storage_bucket": "ohstel-46965.appspot.com"
+    "project_number": "161113664544",
+    "firebase_url": "https://ohstel-production-ready.firebaseio.com",
+    "project_id": "ohstel-production-ready",
+    "storage_bucket": "ohstel-production-ready.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:284920567955:android:6e2a76a9ef64cb75281566",
+        "mobilesdk_app_id": "1:161113664544:android:9dc1dcc5f375e1a1fca045",
         "android_client_info": {
-          "package_name": "com.example.Ohstel_app"
+          "package_name": "com.example.ohostel_hostel_agent_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+          "client_id": "161113664544-9mrd5mluotmd6h31qffkdla7aif426ud.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBx6l_ogjOLxrgqfdKr-dILXHT36QqcK5Y"
+          "current_key": "AIzaSyD4VGkDOVk-xRHBCJFOX07hN798UxGmzyM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+              "client_id": "161113664544-9mrd5mluotmd6h31qffkdla7aif426ud.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -37,27 +37,56 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:284920567955:android:27a91a6086b937e6281566",
+        "mobilesdk_app_id": "1:161113664544:android:06fb9636c9b676a9fca045",
         "android_client_info": {
-          "package_name": "com.example.ohostel_hostel_agent_app"
+          "package_name": "com.example.ohstel_hostel_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+          "client_id": "161113664544-9mrd5mluotmd6h31qffkdla7aif426ud.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBx6l_ogjOLxrgqfdKr-dILXHT36QqcK5Y"
+          "current_key": "AIzaSyD4VGkDOVk-xRHBCJFOX07hN798UxGmzyM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "284920567955-qjv00ar4hhmq8v2fdrg2oqklr37rr2bh.apps.googleusercontent.com",
+              "client_id": "161113664544-9mrd5mluotmd6h31qffkdla7aif426ud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:161113664544:android:9eadfd5cfc1337d0fca045",
+        "android_client_info": {
+          "package_name": "com.ohstelng.Ohstel_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "161113664544-9mrd5mluotmd6h31qffkdla7aif426ud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4VGkDOVk-xRHBCJFOX07hN798UxGmzyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "161113664544-9mrd5mluotmd6h31qffkdla7aif426ud.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
