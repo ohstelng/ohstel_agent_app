@@ -26,7 +26,7 @@ class FoodMethods {
         await foodCollectionRef
             .document(foodModel.fastFoodName)
             .setData(foodModel.toMap());
-        Fluttertoast.showToast(msg: 'Hostel Added To DateBase');
+        Fluttertoast.showToast(msg: 'Fast Food Added To DateBase');
       }
       //
     } catch (e) {
@@ -117,10 +117,11 @@ class FoodMethods {
         extraItems: [],
         itemCategoriesList: [],
         haveExtras: false,
-        uniName: 'all',
-        locationName: 'none',
         display: false,
         hasBatchTime: false,
+        stateLocation: 'drinks',
+        foodFastLocation: 'drinks',
+        mainArea: 'drinks',
       );
 
       DocumentSnapshot doc =

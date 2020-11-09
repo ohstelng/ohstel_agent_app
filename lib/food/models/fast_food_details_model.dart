@@ -10,9 +10,12 @@ class FastFoodModel {
   List itemCategoriesList;
   bool hasBatchTime;
   bool haveExtras;
-  String uniName;
-  String locationName;
+  bool toDisplay;
+//  String locationName;
   bool display;
+  String foodFastLocation;
+  String stateLocation;
+  String mainArea;
 
   FastFoodModel({
     @required this.fastFoodName,
@@ -24,9 +27,12 @@ class FastFoodModel {
     @required this.itemCategoriesList,
     @required this.hasBatchTime,
     @required this.haveExtras,
-    @required this.uniName,
-    @required this.locationName,
+//    @required this.locationName,
+    @required this.foodFastLocation,
+    @required this.stateLocation,
+    @required this.mainArea,
     this.display,
+    this.toDisplay,
   });
 
   FastFoodModel.fromMap(Map<String, dynamic> mapData) {
@@ -39,8 +45,11 @@ class FastFoodModel {
     this.itemCategoriesList = mapData['itemCategoriesList'];
     this.hasBatchTime = mapData['hasBatchTime'];
     this.haveExtras = mapData['haveExtras'];
-    this.uniName = mapData['uniName'];
-    this.locationName = mapData['locationName'];
+    this.toDisplay = mapData['toDisplay'];
+//    this.locationName = mapData['locationName'];
+    this.foodFastLocation = mapData['foodFastLocation'];
+    this.stateLocation = mapData['stateLocation'];
+    this.mainArea = mapData['mainArea'];
     this.display = mapData['display'];
   }
 
@@ -55,8 +64,11 @@ class FastFoodModel {
     data['itemCategoriesList'] = this.itemCategoriesList;
     data['hasBatchTime'] = this.hasBatchTime;
     data['haveExtras'] = this.haveExtras;
-    data['uniName'] = this.uniName;
-    data['locationName'] = this.locationName;
+    data['toDisplay'] = true;
+//    data['locationName'] = this.locationName;
+    data['foodFastLocation'] = this.foodFastLocation;
+    data['stateLocation'] = this.stateLocation;
+    data['mainArea'] = this.mainArea;
     data['display'] = this.display;
 
     return data;

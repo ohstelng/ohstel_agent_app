@@ -1,4 +1,5 @@
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ohostel_hostel_agent_app/food/food_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/models/fast_food_details_model.dart';
@@ -6,7 +7,10 @@ import 'package:ohostel_hostel_agent_app/food/models/paid_food_model.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
 class FoodOrderPage extends StatelessWidget {
-  final List uniList = ['unilorin', 'unilag', 'lasu', 'al-hikmat'];
+  final List uniList = [
+    'kwara',
+    'lagos',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -14,18 +18,25 @@ class FoodOrderPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: uniList.length,
         itemBuilder: (context, index) {
-          return FlatButton(
-            color: Colors.green,
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SelectFoodPage(
-                    uniName: uniList[index],
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+            width: MediaQuery.of(context).size.width * 0.40,
+            child: FlatButton(
+              color: Colors.green,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SelectFoodPage(
+                      state: uniList[index],
+                    ),
                   ),
-                ),
-              );
-            },
-            child: Text('${uniList[index]}'),
+                );
+              },
+              child: Text(
+                '${uniList[index]}',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           );
         },
       ),
@@ -34,12 +45,13 @@ class FoodOrderPage extends StatelessWidget {
 }
 
 class SelectFoodPage extends StatelessWidget {
-  final String uniName;
+  final String state;
 
-  SelectFoodPage({@required this.uniName});
+  SelectFoodPage({@required this.state});
 
   @override
   Widget build(BuildContext context) {
+    print('SSS: $state');
     return Scaffold(
       body: SafeArea(
         child: PaginateFirestore(
@@ -47,7 +59,7 @@ class SelectFoodPage extends StatelessWidget {
           itemBuilderType: PaginateBuilderType.listView,
           query: FoodMethods()
               .foodCollectionRef
-              .where('uniName', isEqualTo: uniName)
+              .where('stateLocation', isEqualTo: state.toLowerCase())
               .orderBy('fastFood', descending: true),
           itemBuilder: (_, context, snap) {
             FastFoodModel fastFood = FastFoodModel.fromMap(snap.data);
@@ -59,7 +71,7 @@ class SelectFoodPage extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => SelectedOrderPage(
-                        uniName: uniName,
+                        state: state,
                         fastFoodName: fastFood.fastFoodName,
                       ),
                     ),
@@ -84,10 +96,10 @@ class SelectFoodPage extends StatelessWidget {
 }
 
 class SelectedOrderPage extends StatefulWidget {
-  final String uniName;
+  final String state;
   final String fastFoodName;
 
-  SelectedOrderPage({@required this.uniName, @required this.fastFoodName});
+  SelectedOrderPage({@required this.state, @required this.fastFoodName});
 
   @override
   _SelectedOrderPageState createState() => _SelectedOrderPageState();
@@ -144,6 +156,7 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
       fastFoodNames: order.fastFoodNames,
       address: order.address,
       uniName: order.uniName,
+      orderState: order.orderState,
     );
 
     print(order.id);
@@ -230,7 +243,7 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.uniName);
+    print(widget.state);
     print(widget.fastFoodName);
     return Scaffold(
       appBar: AppBar(
@@ -254,20 +267,57 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
                 query: FoodMethods()
                     .orderedFoodCollectionRef
                     .where('doneWith', isEqualTo: false)
-                    .where('uniName', isEqualTo: widget.uniName)
+                    .where('orderState', isEqualTo: widget.state)
                     .where('fastFoodName', arrayContains: widget.fastFoodName)
                     .orderBy('timestamp', descending: true),
                 itemBuilder: (_, context, snap) {
                   PaidFood paidOrder = PaidFood.fromMap(snap.data);
-//                  return Text('jmjjj');
+                  String dateTime = paidOrder.timestamp.toDate().toString();
+                  String date = dateTime.split(' ')[0];
+                  String time = dateTime.split(' ')[1].split('.')[0];
 
                   return Container(
-//              margin: EdgeInsets.all(5.0),
                     child: Card(
                       elevation: 2.0,
                       child: ExpansionTile(
-                        title: Text('${paidOrder.id}'),
-                        subtitle: Text('${paidOrder.timestamp.toDate()}'),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${paidOrder.id}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '${paidOrder.buyerFullName}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Date: $date',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            Text(
+                              'Time: $time',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
+                        ),
                         children: [
                           Container(
                             width: double.infinity,
@@ -364,8 +414,7 @@ class _SelectedOrderPageState extends State<SelectedOrderPage> {
                     ],
                   ),
                 ),
-//          Text('Price: ${currentOrder.productPrice}'),
-//          Text('Category: ${currentOrder.productCategory}'),
+          Text('numbeOfPlate: ${currentOrder.numberOfPlates}'),
           Text('deliveryStatus: ${currentOrder.status}'),
         ],
       ),

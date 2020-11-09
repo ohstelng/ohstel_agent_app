@@ -11,7 +11,6 @@ import 'package:ohostel_hostel_agent_app/food/food_methods.dart';
 import 'package:ohostel_hostel_agent_app/food/models/extras_food_details.dart';
 import 'package:ohostel_hostel_agent_app/food/models/fast_food_details_model.dart';
 import 'package:ohostel_hostel_agent_app/food/models/food_details_model.dart';
-import 'package:ohostel_hostel_agent_app/hive_methods/hive_class.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_button.dart';
 import 'package:ohostel_hostel_agent_app/widgets/custom_smallButton.dart';
 import 'package:ohostel_hostel_agent_app/widgets/done_popup.dart';
@@ -26,7 +25,8 @@ class AddNewFastFood extends StatefulWidget {
 }
 
 class _AddNewFastFoodState extends State<AddNewFastFood> {
-  StreamController _uniNameController = StreamController.broadcast();
+  StreamController _stateLocationController = StreamController.broadcast();
+  StreamController _mainAreaController = StreamController.broadcast();
   final formKey = GlobalKey<FormState>();
   bool hasBatchTimeList = false;
   TimeOfDay time = TimeOfDay.now();
@@ -34,8 +34,9 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   String fastFoodName;
   String address;
   String openTime;
-  String uniName;
-  String areaName = 'Select Area Name';
+  String stateLocation;
+  String mainArea;
+  String foodFastLocation = 'Select Area Name';
   File fastFoodImages;
   String fastFoodImageUrl;
   ItemDetails itemDetailSold;
@@ -43,80 +44,68 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   String _itemName;
   String _itemCategory;
   int _value = 1;
-  int _itemPrice;
+  String _itemPrice;
   String _desc;
   File _foodImage;
   String _foodImageUrl;
   bool isSending = false;
 
-  void _showEditUniDailog() {
-    showDialog(
+  Future<void> selectStatePopUp() async {
+    await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Select Uni'),
+          title: Text('Select State'),
           content: SizedBox(
             height: MediaQuery.of(context).size.height * 0.55,
             child: FutureBuilder(
-              future: getUniList(),
+              future: getAllFoodLocation(),
               builder: (context, snapshot) {
                 print(snapshot.data);
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
+
+                if (snapshot.hasError) {
+                  return Text('Error!');
+                }
+
                 print(snapshot.data);
-                Map data = snapshot.data;
+                List data = snapshot.data;
                 return Container(
                   width: double.maxFinite,
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: data.length,
                     itemBuilder: (context, index) {
-                      List<String> uniList = data.keys.toList();
-                      uniList.sort();
-                      Map currentUniDetails = data[uniList[index]];
-
+                      String currentState = data[index];
                       return Column(
                         children: <Widget>[
                           Container(
-                              margin: EdgeInsets.only(left: 10.0, right: 10.0),
-                              child: ListTile(
-                                onTap: () async {
-                                  _uniNameController
-                                      .add(currentUniDetails['abbr']);
-                                  Navigator.pop(context);
-                                  uniName = currentUniDetails['abbr'];
-                                  areaName = 'Select Area Name';
-                                  refreshPage();
-                                },
-                                title: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.location_on,
-                                      color: Colors.grey,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        '${currentUniDetails['name']}',
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  '${currentUniDetails['abbr']}',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w300,
+                            margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: InkWell(
+                              onTap: () async {
+                                _stateLocationController.add(currentState);
+                                Navigator.pop(context);
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.location_on,
                                     color: Colors.grey,
                                   ),
-                                ),
-                              )),
+                                  Text(
+                                    '$currentState',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           Divider(),
                         ],
                       );
@@ -129,14 +118,113 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
         );
       },
     );
+    setState(() {});
   }
 
-  Future getUniList() async {
-    String url = baseApiUrl + "/hostel_api/searchKeys";
-    var response = await http.get(url);
-    var result = json.decode(response.body);
-    print(result);
-    return result;
+  Future<void> selectMainAreaPopUp() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Select Main Area'),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            child: FutureBuilder(
+              future: getAllFoodMainAreaLocation(),
+              builder: (context, snapshot) {
+                print(snapshot.data);
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Text('Error!');
+                }
+
+                print(snapshot.data);
+                List data = snapshot.data;
+                return Container(
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      String currentState = data[index];
+                      return Column(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: InkWell(
+                              onTap: () async {
+                                _mainAreaController.add(currentState);
+                                Navigator.pop(context);
+                              },
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.location_on,
+                                    color: Colors.grey,
+                                  ),
+                                  Text(
+                                    '$currentState',
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+    setState(() {});
+  }
+
+  Future getAllFoodLocation() async {
+    String url = baseApiUrl + "/food_api/all_food_location";
+
+    try {
+      var response = await http.get(url);
+      var result = json.decode(response.body);
+      print(result);
+      return result;
+    } on FormatException catch (e) {
+      return [];
+    } catch (e, s) {
+      print(e);
+      print(s);
+      return ['None Found!'];
+    }
+  }
+
+  Future getAllFoodMainAreaLocation() async {
+    String url = baseApiUrl + "/food_api/main_areas/?state=${stateLocation.toLowerCase()}";
+    print(url);
+
+    try {
+      var response = await http.get(url);
+      var result = json.decode(response.body);
+      print(result);
+      return result;
+    } on FormatException catch (e) {
+      return [];
+    } catch (e, s) {
+      print(e);
+      print(s);
+      return ['None Found!'];
+    }
   }
 
   Future<void> selectImage() async {
@@ -206,15 +294,17 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
 
   Future<void> saveData() async {
     if (formKey.currentState.validate() &&
-            uniName != null &&
             _itemCategory != null &&
             fastFoodImages != null &&
             _foodImage != null &&
-            areaName != 'Select Area Name' ||
-        areaName != null) {
+            mainArea != null &&
+            stateLocation != null &&
+            foodFastLocation != 'Select Area Name' ||
+        foodFastLocation != null) {
       formKey.currentState.save();
       print('pass');
 
+      print(fastFoodName);
       setState(() {
         isSending = true;
       });
@@ -228,7 +318,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
         Map itemDetails = ItemDetails(
           itemName: _itemName,
           itemCategory: _itemCategory,
-          price: _itemPrice,
+          price: int.parse(_itemPrice),
           imageUrl: _foodImageUrl,
           shortDescription: _desc,
           itemFastFoodName: fastFoodName,
@@ -243,10 +333,12 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
           extraItems: [],
           itemCategoriesList: [],
           haveExtras: false,
-          uniName: uniName.toLowerCase(),
-          locationName: areaName,
+//          locationName: areaName,
           display: true,
           hasBatchTime: hasBatchTimeList,
+          stateLocation: stateLocation.toLowerCase(),
+          foodFastLocation: foodFastLocation.toLowerCase(),
+          mainArea: mainArea.toLowerCase(),
         );
 
         print(fastFood.toMap());
@@ -260,23 +352,29 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
         formKey.currentState.reset();
         fastFoodImages = null;
         _foodImage = null;
-        uniName = null;
         _value = null;
         _itemCategory = null;
-        _uniNameController.add(null);
+        stateLocation = null;
+        foodFastLocation = null;
+        mainArea = null;
+        _stateLocationController.add(null);
+        _mainAreaController.add(null);
       }
     } else {
       Fluttertoast.showToast(msg: 'Pls fill All Input');
     }
   }
 
-  Future<Map> getAreaNamesFromApi() async {
-    String _uniName = uniName ?? await HiveMethods().getUniName();
-    debugPrint('$_uniName');
-    String url = baseApiUrl + '/food_api/${_uniName.toLowerCase()}';
-    var response = await http.get(url);
-    Map data = json.decode(response.body);
-    return data;
+  Future<List> getAreaNamesFromApi() async {
+    if (stateLocation != null) {
+      String url = baseApiUrl +
+          '/location_api/places?location=${stateLocation.toLowerCase()}';
+      var response = await http.get(url);
+      List data = json.decode(response.body);
+      return data;
+    } else {
+      return [];
+    }
   }
 
   Future<void> refreshPage() async {
@@ -290,14 +388,9 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
   }
 
   @override
-  void initState() {
-    _uniNameController.add('none selected');
-    super.initState();
-  }
-
-  @override
   void dispose() {
-    _uniNameController.close();
+    _stateLocationController.close();
+    _mainAreaController.close();
     super.dispose();
   }
 
@@ -386,9 +479,10 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                             children: [
                               ShortButton(
                                 onPressed: () {
-                                  _showEditUniDailog();
+                                  selectStatePopUp();
+                                  print('State: $stateLocation');
                                 },
-                                label: 'Select Institution',
+                                label: 'Select State',
                               ),
                               Container(
                                 height: 45,
@@ -400,12 +494,12 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                                 ),
                                 child: Center(
                                   child: StreamBuilder(
-                                    stream: _uniNameController.stream,
+                                    stream: _stateLocationController.stream,
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
-                                        return Text('No Institution Selected');
+                                        return Text('No State Selected');
                                       } else {
-                                        uniName = snapshot.data;
+                                        stateLocation = snapshot.data;
                                         return Text('${snapshot.data}');
                                       }
                                     },
@@ -415,64 +509,9 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                             ],
                           ),
                         ),
-                        ExpansionTile(
-                          key: GlobalKey(),
-                          title: Text('$areaName'),
-                          leading: Icon(Icons.location_on),
-                          children: <Widget>[
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * .30,
-                              child: FutureBuilder(
-                                future: getAreaNamesFromApi(),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  } else {
-                                    List areaNameList =
-                                        snapshot.data['areaNames'];
-                                    return ListView.builder(
-                                      physics: BouncingScrollPhysics(),
-                                      itemCount: areaNameList.length,
-                                      itemBuilder: (context, index) {
-                                        String currentAreaName =
-                                            areaNameList[index];
-                                        return InkWell(
-                                          onTap: () {
-                                            if (mounted) {
-                                              setState(() {
-                                                areaName = currentAreaName;
-                                              });
-                                            }
-                                          },
-                                          child: Container(
-                                            margin: EdgeInsets.all(5.0),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Icon(
-                                                  Icons.add_location,
-                                                  color: Colors.grey,
-                                                ),
-                                                Text(
-                                                  '$currentAreaName',
-                                                  style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                        mainAreaNameWidget(),
+                        SizedBox(height: 20),
+                        areaNameWidget(),
                         Divider(),
                         showHasBatchWidget(),
                         Divider(),
@@ -599,8 +638,7 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
                                     border: InputBorder.none,
                                     hintText: 'Item Price',
                                   ),
-                                  onSaved: (value) =>
-                                      _itemPrice = int.parse(value.trim()),
+                                  onSaved: (value) => _itemPrice = value.trim(),
                                 ),
                               ),
                             ),
@@ -684,6 +722,161 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
     );
   }
 
+  Widget mainAreaNameWidget() {
+    return Center(
+      child: StreamBuilder(
+          stream: _stateLocationController.stream,
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.orange[700],
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Center(
+                  child: Row(
+                    children: [
+                      SizedBox(width: 20),
+                      Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                      SizedBox(width: 20),
+                      Text(
+                        'Select State Location First To Select Main Area',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ShortButton(
+                      onPressed: () {
+                        selectMainAreaPopUp();
+                        print('State: $stateLocation');
+                      },
+                      label: 'Select Main Area',
+                    ),
+                    Container(
+                      height: 45,
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Styles.themePrimary),
+                      ),
+                      child: Center(
+                        child: StreamBuilder(
+                          stream: _mainAreaController.stream,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Text('No State Selected');
+                            } else {
+                              mainArea = snapshot.data;
+                              return Text('${snapshot.data}');
+                            }
+                          },
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          }),
+    );
+  }
+
+  Widget areaNameWidget() {
+    return Center(
+      child: StreamBuilder(
+          stream: _stateLocationController.stream,
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.orange[700],
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Center(
+                  child: Row(
+                    children: [
+                      SizedBox(width: 20),
+                      Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                      SizedBox(width: 20),
+                      Text(
+                        'Select State Location First To Select Area',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return ExpansionTile(
+                key: GlobalKey(),
+                title: Text('$foodFastLocation'),
+                leading: Icon(Icons.location_on),
+                children: <Widget>[
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * .30,
+                    child: FutureBuilder(
+                      future: getAreaNamesFromApi(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else {
+                          List areaNameList = snapshot.data;
+                          return ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            itemCount: areaNameList.length,
+                            itemBuilder: (context, index) {
+                              String currentAreaName = areaNameList[index];
+                              return InkWell(
+                                onTap: () {
+                                  if (mounted) {
+                                    setState(() {
+                                      foodFastLocation = currentAreaName;
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(5.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.add_location,
+                                        color: Colors.grey,
+                                      ),
+                                      Text(
+                                        '$currentAreaName',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }
+          }),
+    );
+  }
+
   Widget showHasBatchWidget() {
     return Container(
       padding: EdgeInsets.all(10.0),
@@ -712,3 +905,4 @@ class _AddNewFastFoodState extends State<AddNewFastFood> {
     );
   }
 }
+// '7FA1D908DE22E1CFOA2486578B23AA52695C71'
